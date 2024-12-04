@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { fabric } from 'fabric';
 
 export const useEditor = () => {
   const inti = useCallback(
@@ -6,10 +7,11 @@ export const useEditor = () => {
       initialCanvas,
       initialContainer,
     }: {
-      initialCanvas: any;
+      initialCanvas: fabric.Canvas;
       initialContainer: HTMLDivElement;
     }) => {
-      console.log('useEditor inti');
+      initialCanvas.setWidth(initialContainer.offsetWidth);
+      initialCanvas.setHeight(initialContainer.offsetHeight);
     },
     []
   );
