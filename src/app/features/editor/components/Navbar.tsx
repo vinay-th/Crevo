@@ -65,7 +65,7 @@ const Navbar = ({ activeTool, onChangeActiveTool }: NavbarProps) => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={onChangeActiveTool}
+            onClick={() => onChangeActiveTool('select')}
             className={cn(activeTool === 'select' && 'bg-gray-100')}
           >
             <MousePointerClick className="size-4" />
