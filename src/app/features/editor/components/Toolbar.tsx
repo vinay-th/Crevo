@@ -11,21 +11,7 @@ interface ToolbarProps {
 }
 
 const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
-  const selectedObject = editor?.canvas?.getActiveObject();
-
-  const getProperties = (property: any) => {
-    if (!selectedObject) return null;
-
-    return selectedObject.get(property);
-  };
-
-  const fillColor = getProperties('fill');
-  const strokeColor = getProperties('stroke');
-
-  const [properties, setProperties] = useState({
-    fillColor,
-    strokeColor,
-  });
+  const fillColor = editor?.fillColor;
 
   return (
     <div className="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto p-2 gap-x-2">
@@ -40,8 +26,7 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
             <div
               className="rounded-sm size-4 border"
               style={{
-                backgroundColor:
-                  typeof fillColor === 'string' ? fillColor : 'black',
+                backgroundColor: fillColor,
               }}
             />
           </Button>

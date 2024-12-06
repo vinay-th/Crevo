@@ -1,4 +1,5 @@
 import { ChromePicker, CirclePicker } from 'react-color';
+import { rgbaObjectToString } from '../utils';
 
 import { colors } from '../types';
 
@@ -12,14 +13,18 @@ export const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
     <div className="w-full space-y-4">
       <ChromePicker
         color={value}
-        onChange={() => {}}
+        onChange={(color) => {
+          const formattedValue = rgbaObjectToString(color.rgb);
+          onChange(formattedValue);
+        }}
         className="border rounded-lg"
       />
       <CirclePicker
         color={value}
         colors={colors}
-        onChangeComplete={(x) => {
-          console.log(x);
+        onChangeComplete={(color) => {
+          const formattedValue = rgbaObjectToString(color.rgb);
+          onChange(formattedValue);
         }}
         className="border rounded-lg"
       />
