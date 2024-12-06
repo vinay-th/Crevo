@@ -15,6 +15,7 @@ const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
     const workspace = getWorkspace();
     const center = workspace?.getCenterPoint();
 
+    // @ts-expect-error meri marzi bhai
     canvas?._centerObject(object, center);
   };
 
