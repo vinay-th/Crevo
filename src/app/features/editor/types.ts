@@ -139,5 +139,5 @@ export interface Editor {
 
   getActiveFillColor: () => string | fabric.Gradient | fabric.Pattern;
   getActiveStrokeColor: () => string | fabric.Gradient | fabric.Pattern;
-  strokeWidth: number;
+  getActiveStrokeWidth: () => number;
 }

@@ -62,7 +62,7 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
             variant="ghost"
             size="icon"
             onClick={() => onChangeActiveTool('stroke-width')}
-            className={cn(activeTool === 'stroke-width')}
+            className={cn(activeTool === 'stroke-width' && 'bg-gray-100')}
           >
             <BsBorderWidth className="size-4" />
           </Button>

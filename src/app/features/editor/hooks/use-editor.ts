@@ -171,7 +171,14 @@ const buildEditor = ({
       // currently gradient and pattern is not supported
       return value;
     },
-    strokeWidth,
+    getActiveStrokeWidth: () => {
+      const selectedObject = selectedObjects[0];
+      if (!selectedObject) return strokeWidth;
+
+      const value = selectedObject.get('strokeWidth') || strokeWidth;
+
+      return value;
+    },
     selectedObjects,
   };
 };
@@ -247,6 +254,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
         name: 'clip',
         hasControls: false,
         selectable: false,
+        hoverCursor: 'default',
         fill: 'white',
         shadow: new fabric.Shadow({
           color: 'rgba(0, 0, 0, 0.8)',
