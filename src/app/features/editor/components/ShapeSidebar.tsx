@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActiveTool } from '../types';
+import { ActiveTool, Editor } from '../types';
 import { cn } from '@/lib/utils';
 import { ToolbarSidebarHeader } from './ToolbarSidebarHeader';
 import { ToolSidebarClose } from '@/components/crevo/ToolsidebarClose';
@@ -10,11 +10,13 @@ import { IoTriangle } from 'react-icons/io5';
 import { FaDiamond } from 'react-icons/fa6';
 
 interface ShapeSidebarProps {
+  editor: Editor | undefined;
   activeTool: ActiveTool;
   onChangeActiveTool: (tool: ActiveTool) => void;
 }
 
 export const ShapeSidebar = ({
+  editor,
   activeTool,
   onChangeActiveTool,
 }: ShapeSidebarProps) => {
@@ -32,7 +34,7 @@ export const ShapeSidebar = ({
       <ToolbarSidebarHeader title="Shapes" description="Shapes" />
       <ScrollArea>
         <div className="grid grid-cols-3 gap-4 p-4">
-          <ShapeTool icon={FaCircle} onClick={() => {}} />
+          <ShapeTool icon={FaCircle} onClick={() => editor?.addCircle()} />
           <ShapeTool icon={FaSquare} onClick={() => {}} />
           <ShapeTool icon={FaSquareFull} onClick={() => {}} />
           <ShapeTool icon={IoTriangle} onClick={() => {}} />
