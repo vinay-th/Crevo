@@ -35,7 +35,7 @@ export const ShapeSidebar = ({
       <ScrollArea>
         <div className="grid grid-cols-3 gap-4 p-4">
           <ShapeTool icon={FaCircle} onClick={() => editor?.addCircle()} />
-          <ShapeTool icon={FaSquare} onClick={() => {}} />
+          <ShapeTool icon={FaSquare} onClick={() => editor?.addSoftRect()} />
           <ShapeTool icon={FaSquareFull} onClick={() => {}} />
           <ShapeTool icon={IoTriangle} onClick={() => {}} />
           <ShapeTool

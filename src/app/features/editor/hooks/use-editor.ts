@@ -1,6 +1,6 @@
 import { useCallback, useState, useMemo } from 'react';
 import { fabric } from 'fabric';
-import { BuildEditorProps, CIRCLE_OPT, Editor } from '../types';
+import { BuildEditorProps, CIRCLE_OPT, Editor, SOFT_RECT_OPT } from '../types';
 
 import { useAutoResize } from './use-auto-resize';
 
@@ -15,8 +15,16 @@ const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
     const workspace = getWorkspace();
     const center = workspace?.getCenterPoint();
 
+    if (!center) return;
+
     // @ts-expect-error meri marzi bhai
     canvas?._centerObject(object, center);
+  };
+
+  const addToCanvas = (object: fabric.Object) => {
+    center(object);
+    canvas?.add(object);
+    canvas?.setActiveObject(object);
   };
 
   return {
@@ -24,9 +32,15 @@ const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
       const object = new fabric.Circle({
         ...CIRCLE_OPT,
       });
-      canvas?.add(object);
-      center(object);
-      canvas?.setActiveObject(object);
+      addToCanvas(object);
+    },
+    addSoftRect: () => {
+      const object = new fabric.Rect({
+        ...SOFT_RECT_OPT,
+        rx: 10,
+        ry: 10,
+      });
+      addToCanvas(object);
     },
   };
 };

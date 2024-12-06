@@ -30,6 +30,17 @@ export const CIRCLE_OPT = {
   strokeWidth: STROKE_WIDTH,
 };
 
+export const SOFT_RECT_OPT = {
+  left: 100,
+  top: 100,
+  fill: FILL_COLOR,
+  stroke: STROKE_COLOR,
+  strokeWidth: STROKE_WIDTH,
+  width: 400,
+  height: 400,
+  angle: 0,
+};
+
 export type BuildEditorProps = {
   canvas: fabric.Canvas | null;
   // circle: fabric.Circle;
@@ -37,4 +48,5 @@ export type BuildEditorProps = {
 
 export interface Editor {
   addCircle: () => void;
+  addSoftRect: () => void;
 }
