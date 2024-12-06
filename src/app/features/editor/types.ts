@@ -123,7 +123,7 @@ export interface Editor {
   canvas: fabric.Canvas | null;
   selectedObjects: fabric.Object[];
 
-  fillColor: string;
+  getActiveFillColor: () => string | fabric.Gradient | fabric.Pattern;
   strokeColor: string;
   strokeWidth: number;
 }

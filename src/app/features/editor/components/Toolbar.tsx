@@ -1,9 +1,9 @@
 import React from 'react';
-import { useState } from 'react';
 import { ActiveTool, Editor } from '../types';
 import { Hint } from '@/components/crevo/Hint';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { BsBorderWidth } from 'react-icons/bs';
 interface ToolbarProps {
   editor: Editor | undefined;
   activeTool: ActiveTool;
@@ -11,7 +11,7 @@ interface ToolbarProps {
 }
 
 const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
-  const fillColor = editor?.fillColor;
+  const fillColor = editor?.getActiveFillColor();
 
   if (editor?.selectedObjects.length === 0) {
     return (
@@ -32,9 +32,21 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
             <div
               className="rounded-sm size-4 border"
               style={{
-                backgroundColor: fillColor,
+                backgroundColor: `${fillColor}`,
               }}
             />
+          </Button>
+        </Hint>
+      </div>
+      <div className="flex items-center h-full justify-center">
+        <Hint label="Stroke width" side="bottom" sideOffset={5}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => onChangeActiveTool('stroke-width')}
+            className={cn(activeTool === 'stroke-width')}
+          >
+            <BsBorderWidth className="size-4" />
           </Button>
         </Hint>
       </div>
