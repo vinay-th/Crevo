@@ -17,7 +17,7 @@ export const FillColorSidebar = ({
   activeTool,
   onChangeActiveTool,
 }: FillColorSidebarProps) => {
-  const value = editor?.fillColor || FILL_COLOR;
+  const value = editor?.getActiveFillColor() || FILL_COLOR;
 
   const onClose = () => {
     onChangeActiveTool('select');
@@ -40,7 +40,7 @@ export const FillColorSidebar = ({
       />
       <ScrollArea>
         <div className="p-4 space-y-6">
-          <ColorPicker value={value} onChange={onChange} />
+          <ColorPicker value={`${value}`} onChange={onChange} />
         </div>
       </ScrollArea>
       <ToolSidebarClose onClick={onClose} />

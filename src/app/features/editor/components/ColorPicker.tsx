@@ -10,15 +10,20 @@ interface ColorPickerProps {
 
 export const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
   return (
-    <div className="w-full space-y-4">
-      <ChromePicker
-        color={value}
-        onChange={(color) => {
-          const formattedValue = rgbaObjectToString(color.rgb);
-          onChange(formattedValue);
-        }}
-        className="border rounded-lg"
-      />
+    <div className="flex flex-col w-full space-y-4">
+      {/* ChromePicker in Second Sidebar */}
+      <div className="w-full p-2 bg-gray-100 border border-gray-200 rounded-lg shadow-sm">
+        <ChromePicker
+          color={value}
+          onChange={(color) => {
+            const formattedValue = rgbaObjectToString(color.rgb);
+            onChange(formattedValue);
+          }}
+          className="!bg-transparent"
+        />
+      </div>
+
+      {/* CirclePicker */}
       <CirclePicker
         color={value}
         colors={colors}
@@ -26,7 +31,6 @@ export const ColorPicker = ({ value, onChange }: ColorPickerProps) => {
           const formattedValue = rgbaObjectToString(color.rgb);
           onChange(formattedValue);
         }}
-        className="border rounded-lg"
       />
     </div>
   );
