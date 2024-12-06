@@ -5,12 +5,26 @@ import { BuildEditorProps, CIRCLE_OPT, Editor } from '../types';
 import { useAutoResize } from './use-auto-resize';
 
 const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
+  const getWorkspace = () => {
+    return (
+      canvas?.getObjects().find((object) => object.name === 'clip') || null
+    );
+  };
+
+  const center = (object: fabric.Object) => {
+    const workspace = getWorkspace();
+    const center = workspace?.getCenterPoint();
+
+    canvas?._centerObject(object, center);
+  };
+
   return {
     addCircle: () => {
       const object = new fabric.Circle({
         ...CIRCLE_OPT,
       });
       canvas?.add(object);
+      center(object);
       canvas?.setActiveObject(object);
     },
   };

@@ -19,16 +19,15 @@ export type ActiveTool =
 
 export const FILL_COLOR = 'rgba(0, 0, 0, 1)';
 export const STROKE_COLOR = 'rgba(0, 0, 0, 1)';
+export const STROKE_WIDTH = 2;
 
 export const CIRCLE_OPT = {
-  radius: 150,
-  height: 100,
-  width: 100,
+  radius: 225,
+  left: 100,
+  top: 100,
   fill: FILL_COLOR,
   stroke: STROKE_COLOR,
-  strokeWidth: 1,
-  selectable: true,
-  hasControls: true,
+  strokeWidth: STROKE_WIDTH,
 };
 
 export type BuildEditorProps = {
