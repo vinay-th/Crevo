@@ -63,9 +63,19 @@ export const TRIANGLE_OPT = {
   angle: 0,
 };
 
+export const DIAMOND_OPT = {
+  left: 100,
+  top: 100,
+  fill: FILL_COLOR,
+  stroke: STROKE_COLOR,
+  strokeWidth: STROKE_WIDTH,
+  width: 600,
+  height: 600,
+  angle: 0,
+};
+
 export type BuildEditorProps = {
   canvas: fabric.Canvas | null;
-  // circle: fabric.Circle;
 };
 
 export interface Editor {
@@ -73,4 +83,6 @@ export interface Editor {
   addSoftRect: () => void;
   addRect: () => void;
   addTriangle: () => void;
+  addInverseTriangle: () => void;
+  addDiamond: () => void;
 }

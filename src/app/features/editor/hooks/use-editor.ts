@@ -7,6 +7,7 @@ import {
   SOFT_RECT_OPT,
   RECT_OPT,
   TRIANGLE_OPT,
+  DIAMOND_OPT,
 } from '../types';
 
 import { useAutoResize } from './use-auto-resize';
@@ -59,6 +60,37 @@ const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
       const object = new fabric.Triangle({
         ...TRIANGLE_OPT,
       });
+      addToCanvas(object);
+    },
+    addInverseTriangle: () => {
+      const HEIGHT = 400;
+      const WIDTH = 400;
+      const object = new fabric.Polygon(
+        [
+          { x: 0, y: 0 },
+          { x: WIDTH, y: 0 },
+          { x: WIDTH / 2, y: HEIGHT },
+        ],
+        {
+          ...TRIANGLE_OPT,
+        }
+      );
+      addToCanvas(object);
+    },
+    addDiamond: () => {
+      const HEIGHT = DIAMOND_OPT.height;
+      const WIDTH = DIAMOND_OPT.width;
+      const object = new fabric.Polygon(
+        [
+          { x: WIDTH / 2, y: 0 },
+          { x: WIDTH, y: HEIGHT / 2 },
+          { x: WIDTH / 2, y: HEIGHT },
+          { x: 0, y: HEIGHT / 2 },
+        ],
+        {
+          ...DIAMOND_OPT,
+        }
+      );
       addToCanvas(object);
     },
   };
