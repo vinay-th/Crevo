@@ -1,6 +1,13 @@
 import { useCallback, useState, useMemo } from 'react';
 import { fabric } from 'fabric';
-import { BuildEditorProps, CIRCLE_OPT, Editor, SOFT_RECT_OPT } from '../types';
+import {
+  BuildEditorProps,
+  CIRCLE_OPT,
+  Editor,
+  SOFT_RECT_OPT,
+  RECT_OPT,
+  TRIANGLE_OPT,
+} from '../types';
 
 import { useAutoResize } from './use-auto-resize';
 
@@ -39,6 +46,18 @@ const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
         ...SOFT_RECT_OPT,
         rx: 30,
         ry: 30,
+      });
+      addToCanvas(object);
+    },
+    addRect: () => {
+      const object = new fabric.Rect({
+        ...RECT_OPT,
+      });
+      addToCanvas(object);
+    },
+    addTriangle: () => {
+      const object = new fabric.Triangle({
+        ...TRIANGLE_OPT,
       });
       addToCanvas(object);
     },
