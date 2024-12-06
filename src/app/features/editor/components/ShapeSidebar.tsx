@@ -2,7 +2,12 @@ import React from 'react';
 import { ActiveTool } from '../types';
 import { cn } from '@/lib/utils';
 import { ToolbarSidebarHeader } from './ToolbarSidebarHeader';
-import { ToolsidebarClose } from '@/components/crevo/ToolsidebarClose';
+import { ToolSidebarClose } from '@/components/crevo/ToolsidebarClose';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { ShapeTool } from './ShapeTool';
+import { FaCircle, FaSquare, FaSquareFull } from 'react-icons/fa';
+import { IoTriangle } from 'react-icons/io5';
+import { FaDiamond } from 'react-icons/fa6';
 
 interface ShapeSidebarProps {
   activeTool: ActiveTool;
@@ -25,7 +30,21 @@ export const ShapeSidebar = ({
       )}
     >
       <ToolbarSidebarHeader title="Shapes" description="Shapes" />
-      <ToolsidebarClose onClick={onClose} />
+      <ScrollArea>
+        <div className="grid grid-cols-3 gap-4 p-4">
+          <ShapeTool icon={FaCircle} onClick={() => {}} />
+          <ShapeTool icon={FaSquare} onClick={() => {}} />
+          <ShapeTool icon={FaSquareFull} onClick={() => {}} />
+          <ShapeTool icon={IoTriangle} onClick={() => {}} />
+          <ShapeTool
+            icon={IoTriangle}
+            onClick={() => {}}
+            iconClassName="rotate-180"
+          />
+          <ShapeTool icon={FaDiamond} onClick={() => {}} />
+        </div>
+      </ScrollArea>
+      <ToolSidebarClose onClick={onClose} />
     </aside>
   );
 };
