@@ -11,6 +11,7 @@ import {
 } from '../types';
 
 import { useAutoResize } from './use-auto-resize';
+import { useCanvasEvents } from './use-canvas-events';
 
 const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
   const getWorkspace = () => {
@@ -99,9 +100,16 @@ const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
 export const useEditor = () => {
   const [canvas, setCanvas] = useState<null | fabric.Canvas>(null);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  const [_selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
   useAutoResize({
     canvas,
     container,
+  });
+
+  useCanvasEvents({
+    canvas,
+    container,
+    setSelectedObjects,
   });
 
   const editor = useMemo(() => {
