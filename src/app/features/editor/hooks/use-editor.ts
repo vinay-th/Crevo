@@ -13,6 +13,7 @@ import {
   STROKE_WIDTH,
   EditorHookProps,
   STROKE_DASH_ARRAY,
+  OPACITY,
 } from '../types';
 
 import { useAutoResize } from './use-auto-resize';
@@ -54,6 +55,13 @@ const buildEditor = ({
   };
 
   return {
+    changeOpacity: (value: number) => {
+      canvas?.getActiveObjects().forEach((object) => {
+        object.set({ opacity: value });
+      });
+      canvas?.renderAll();
+    },
+
     bringForward: () => {
       canvas?.getActiveObjects().forEach((object) => {
         canvas?.bringForward(object);
@@ -215,6 +223,14 @@ const buildEditor = ({
       if (!selectedObject) return strokeDashArray;
 
       const value = selectedObject.get('strokeDashArray') || strokeDashArray;
+
+      return value;
+    },
+    getActiveOpacity: () => {
+      const selectedObject = selectedObjects[0];
+      if (!selectedObject) return OPACITY;
+
+      const value = selectedObject.get('opacity') || OPACITY;
 
       return value;
     },

@@ -54,6 +54,7 @@ export const FILL_COLOR = 'rgba(0, 0, 0, 1)';
 export const STROKE_COLOR = 'rgba(0, 0, 0, 1)';
 export const STROKE_WIDTH = 2;
 export const STROKE_DASH_ARRAY = [];
+export const OPACITY = 1;
 
 export const CIRCLE_OPT = {
   radius: 225,
@@ -133,6 +134,7 @@ export interface Editor {
   changeStrokeColor: (value: string) => void;
   changeStrokeWidth: (value: number) => void;
   changeStrokeDashArray: (value: number[]) => void;
+  changeOpacity: (value: number) => void;
 
   addCircle: () => void;
   addSoftRect: () => void;
@@ -148,4 +150,5 @@ export interface Editor {
   getActiveStrokeColor: () => string | fabric.Gradient | fabric.Pattern;
   getActiveStrokeWidth: () => number;
   getActiveStrokeDashArray: () => number[];
+  getActiveOpacity: () => number;
 }
