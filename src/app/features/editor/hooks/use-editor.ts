@@ -37,8 +37,8 @@ const buildEditor = ({ canvas }: BuildEditorProps): Editor => {
     addSoftRect: () => {
       const object = new fabric.Rect({
         ...SOFT_RECT_OPT,
-        rx: 10,
-        ry: 10,
+        rx: 30,
+        ry: 30,
       });
       addToCanvas(object);
     },
@@ -99,20 +99,6 @@ export const useEditor = () => {
 
       setCanvas(initialCanvas);
       setContainer(initialContainer);
-
-      const test = new fabric.Rect({
-        width: 100,
-        height: 100,
-        name: 'test',
-        fill: 'salmon',
-        shadow: new fabric.Shadow({
-          color: 'rgba(0, 0, 0, 0.8)',
-          blur: 5,
-        }),
-      });
-
-      initialCanvas.add(test);
-      initialCanvas.centerObject(test);
     },
     []
   );
