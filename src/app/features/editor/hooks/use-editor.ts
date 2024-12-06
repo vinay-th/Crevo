@@ -25,6 +25,7 @@ const buildEditor = ({
   fillColor,
   strokeColor,
   strokeWidth,
+  selectedObjects,
 }: BuildEditorProps): Editor => {
   const getWorkspace = () => {
     return (
@@ -154,6 +155,7 @@ const buildEditor = ({
     fillColor,
     strokeColor,
     strokeWidth,
+    selectedObjects,
   };
 };
 
@@ -189,6 +191,7 @@ export const useEditor = () => {
         fillColor,
         strokeColor,
         strokeWidth,
+        selectedObjects,
       });
     }
   }, [
@@ -199,8 +202,7 @@ export const useEditor = () => {
     setFillColor,
     setStrokeColor,
     setStrokeWidth,
-    // setSelectedObjects,
-    // setFontSize,
+    selectedObjects,
   ]);
 
   const inti = useCallback(
