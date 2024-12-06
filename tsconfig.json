@@ -23,9 +23,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"],
-  "compilerOptions": {
-    "noUnusedLocals": false,
-    "noUnusedParameters": false
-  }
+  "exclude": ["node_modules"]
 }
