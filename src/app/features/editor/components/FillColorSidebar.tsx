@@ -1,13 +1,10 @@
 import React from 'react';
-import { ActiveTool, Editor } from '../types';
+import { ActiveTool, Editor, FILL_COLOR } from '../types';
 import { cn } from '@/lib/utils';
 import { ToolbarSidebarHeader } from './ToolbarSidebarHeader';
 import { ToolSidebarClose } from '@/components/crevo/ToolsidebarClose';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ShapeTool } from './ShapeTool';
-import { FaCircle, FaSquare, FaSquareFull } from 'react-icons/fa';
-import { IoTriangle } from 'react-icons/io5';
-import { FaDiamond } from 'react-icons/fa6';
+import { ColorPicker } from './ColorPicker';
 
 interface FillColorSidebarProps {
   editor: Editor | undefined;
@@ -20,6 +17,8 @@ export const FillColorSidebar = ({
   activeTool,
   onChangeActiveTool,
 }: FillColorSidebarProps) => {
+  const value = editor?.fillColor || FILL_COLOR;
+
   const onClose = () => {
     onChangeActiveTool('select');
   };
@@ -40,7 +39,9 @@ export const FillColorSidebar = ({
         description="Add fill color to your element"
       />
       <ScrollArea>
-        <div className="p-4 space-y-6"></div>
+        <div className="p-4 space-y-6">
+          <ColorPicker value={value} onChange={onChange} />
+        </div>
       </ScrollArea>
       <ToolSidebarClose onClick={onClose} />
     </aside>
