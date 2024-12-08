@@ -1,4 +1,5 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import { ActiveTool, Editor } from '../types';
 import { cn } from '@/lib/utils';
 import { ToolbarSidebarHeader } from './ToolbarSidebarHeader';
@@ -8,6 +9,7 @@ import { useGetImages } from '../../images/api/use-get-images';
 import { AlertTriangle, Loader } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { UploadButton } from '@/lib/uploadthing';
 
 interface ImageSidebarProps {
   editor: Editor | undefined;
@@ -21,6 +23,7 @@ export const ImageSidebar = ({
   onChangeActiveTool,
 }: ImageSidebarProps) => {
   const { data, isLoading, isError } = useGetImages();
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const onClose = () => {
     onChangeActiveTool('select');
@@ -37,6 +40,31 @@ export const ImageSidebar = ({
         title="Images"
         description="Add images to your design"
       />
+      <div className="p-4 border-b">
+        <UploadButton
+          appearance={{
+            button: 'w-full text-sm font-medium',
+            allowedContent: 'hidden',
+          }}
+          content={{
+            button: 'Upload Image',
+          }}
+          endpoint="imageUploader"
+          onUploadError={(error: Error) => {
+            setUploadError(error.message);
+            console.error('Upload error:', error);
+          }}
+          onClientUploadComplete={(res) => {
+            if (res?.[0]?.url) {
+              editor?.addImage(res[0].url);
+              setUploadError(null);
+            }
+          }}
+        />
+        {uploadError && (
+          <p className="text-red-500 text-sm mt-2">{uploadError}</p>
+        )}
+      </div>
       {isLoading && (
         <div className="flex items-center justify-center flex-1 ">
           <Loader className="size-6 text-muted-foreground animate-spin " />
