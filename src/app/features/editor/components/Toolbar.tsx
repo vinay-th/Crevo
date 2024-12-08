@@ -18,6 +18,7 @@ import {
   FaStrikethrough,
   FaUnderline,
 } from 'react-icons/fa';
+import { FontSizeInput } from './FontSizeInput';
 interface ToolbarProps {
   editor: Editor | undefined;
   activeTool: ActiveTool;
@@ -33,7 +34,9 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
   const initialFontUnderline = editor?.getActiveFontUnderline();
   const initialTextAlign = editor?.getActiveTextAlign();
 
+  const initialFontSize = editor?.getActiveFontSize() || 60;
   const initialFontWeight = editor?.getActiveFontWeight() || 400;
+
   const [properties, setProperties] = useState({
     fillColor: initialFillColor,
     strokeColor: initialStrokeColor,
@@ -43,6 +46,7 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
     fontLineThrough: initialFontLineThrough,
     fontUnderline: initialFontUnderline,
     textAlign: initialTextAlign,
+    fontSize: initialFontSize,
   });
 
   const selectedObject = editor?.selectedObjects[0];
@@ -53,6 +57,17 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
     if (!selectedObject) return;
     editor?.changeTextAlign(value);
     setProperties((current) => ({ ...current, textAlign: value }));
+  };
+  const onChangeFontSize = (value: number) => {
+    if (!selectedObject) {
+      return;
+    }
+
+    editor?.changeFontSize(value);
+    setProperties((current) => ({
+      ...current,
+      fontSize: value,
+    }));
   };
 
   const toggleBold = () => {
@@ -254,6 +269,14 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
               <FaAlignJustify className="size-4" />
             </Button>
           </Hint>
+        </div>
+      )}
+      {isText && (
+        <div className="flex items-center h-full justify-center">
+          <FontSizeInput
+            value={properties.fontSize}
+            onChange={onChangeFontSize}
+          />
         </div>
       )}
       {!isText && (

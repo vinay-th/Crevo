@@ -185,6 +185,15 @@ const buildEditor = ({
       });
       canvas?.renderAll();
     },
+    changeFontSize: (value: number) => {
+      canvas?.getActiveObjects().forEach((object) => {
+        if (isTextType(object.type)) {
+          // @ts-expect-error meri marzi bhai
+          object.set({ fontSize: value });
+        }
+      });
+      canvas?.renderAll();
+    },
 
     addCircle: () => {
       const object = new fabric.Circle({
@@ -358,6 +367,18 @@ const buildEditor = ({
 
       return value;
     },
+    getActiveFontSize: () => {
+      const selectedObject = selectedObjects[0];
+
+      if (!selectedObject) {
+        return 60;
+      }
+
+      // @ts-expect-error hota hai yrr
+      const value = selectedObject.get('fontSize') || 60;
+
+      return value;
+    },
     selectedObjects,
   };
 };
@@ -368,7 +389,6 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
   const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
 
   const [fontFamily, setFontFamily] = useState(FONT_FAMILY);
-  const [fontSize, setFontSize] = useState('16');
 
   const [fillColor, setFillColor] = useState(FILL_COLOR);
   const [strokeColor, setStrokeColor] = useState(STROKE_COLOR);

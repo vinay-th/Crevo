@@ -174,6 +174,7 @@ export interface Editor {
   changeFontLineThrough: (value: boolean) => void;
   changeFontUnderline: (value: boolean) => void;
   changeTextAlign: (value: string) => void;
+  changeFontSize: (value: number) => void;
 
   addText: (value: string, options?: fabric.ITextOptions) => void;
 
@@ -200,4 +201,5 @@ export interface Editor {
   getActiveFontLineThrough: () => boolean;
   getActiveFontUnderline: () => boolean;
   getActiveTextAlign: () => string;
+  getActiveFontSize: () => number;
 }
