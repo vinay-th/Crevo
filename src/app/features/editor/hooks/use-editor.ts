@@ -158,6 +158,24 @@ const buildEditor = ({
       });
       canvas?.renderAll();
     },
+    changeFontLineThrough: (value: boolean) => {
+      canvas?.getActiveObjects().forEach((object) => {
+        if (isTextType(object.type)) {
+          object._set('linethrough', value);
+          return;
+        }
+      });
+      canvas?.renderAll();
+    },
+    changeFontUnderline: (value: boolean) => {
+      canvas?.getActiveObjects().forEach((object) => {
+        if (isTextType(object.type)) {
+          object._set('underline', value);
+          return;
+        }
+      });
+      canvas?.renderAll();
+    },
 
     addCircle: () => {
       const object = new fabric.Circle({
@@ -301,6 +319,24 @@ const buildEditor = ({
 
       // @ts-expect-error hota hai yrr
       const value = selectedObject.get('fontStyle') || 'normal';
+
+      return value;
+    },
+    getActiveFontLineThrough: () => {
+      const selectedObject = selectedObjects[0];
+      if (!selectedObject) return false;
+
+      // @ts-expect-error hota hai yrr
+      const value = selectedObject.get('linethrough') || false;
+
+      return value;
+    },
+    getActiveFontUnderline: () => {
+      const selectedObject = selectedObjects[0];
+      if (!selectedObject) return false;
+
+      // @ts-expect-error hota hai yrr
+      const value = selectedObject.get('underline') || false;
 
       return value;
     },

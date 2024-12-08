@@ -8,7 +8,7 @@ import { BsBorderWidth } from 'react-icons/bs';
 import { ArrowDown, ArrowUp, ChevronDown } from 'lucide-react';
 import { RxTransparencyGrid } from 'react-icons/rx';
 import { isTextType } from '../utils';
-import { FaBold, FaItalic } from 'react-icons/fa';
+import { FaBold, FaItalic, FaStrikethrough, FaUnderline } from 'react-icons/fa';
 interface ToolbarProps {
   editor: Editor | undefined;
   activeTool: ActiveTool;
@@ -20,6 +20,8 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
   const initialStrokeColor = editor?.getActiveStrokeColor();
   const initialFontFamily = editor?.getActiveFontFamily();
   const initialFontStyle = editor?.getActiveFontStyle();
+  const initialFontLineThrough = editor?.getActiveFontLineThrough();
+  const initialFontUnderline = editor?.getActiveFontUnderline();
 
   const initialFontWeight = editor?.getActiveFontWeight() || 400;
   const [properties, setProperties] = useState({
@@ -28,6 +30,8 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
     fontFamily: initialFontFamily,
     fontWeight: initialFontWeight,
     fontStyle: initialFontStyle,
+    fontLineThrough: initialFontLineThrough,
+    fontUnderline: initialFontUnderline,
   });
 
   const selectedObject = editor?.selectedObjects[0];
@@ -51,6 +55,21 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
 
     editor?.changeFontStyle(newVal);
     setProperties((current) => ({ ...current, fontStyle: newVal }));
+  };
+  const toggleLinethrough = () => {
+    if (!selectedObject) return;
+    const newVal = properties.fontLineThrough ? false : true;
+
+    editor?.changeFontLineThrough(newVal);
+    setProperties((current) => ({ ...current, fontLineThrough: newVal }));
+  };
+
+  const toggleUnderline = () => {
+    if (!selectedObject) return;
+    const newVal = properties.fontUnderline ? false : true;
+
+    editor?.changeFontUnderline(newVal);
+    setProperties((current) => ({ ...current, fontUnderline: newVal }));
   };
 
   if (editor?.selectedObjects.length === 0) {
@@ -122,6 +141,36 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
               onClick={toggleItalic}
             >
               <FaItalic className="size-4" />
+            </Button>
+          </Hint>
+        </div>
+      )}
+      {isText && (
+        <div className="flex items-center h-full justify-center">
+          <Hint label="Strike" side="bottom" sideOffset={5}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                properties.fontLineThrough === true && 'bg-gray-100'
+              )}
+              onClick={toggleLinethrough}
+            >
+              <FaStrikethrough className="size-4" />
+            </Button>
+          </Hint>
+        </div>
+      )}
+      {isText && (
+        <div className="flex items-center h-full justify-center">
+          <Hint label="Underline" side="bottom" sideOffset={5}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(properties.fontUnderline === true && 'bg-gray-100')}
+              onClick={toggleUnderline}
+            >
+              <FaUnderline className="size-4" />
             </Button>
           </Hint>
         </div>

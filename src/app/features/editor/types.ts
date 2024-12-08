@@ -171,6 +171,8 @@ export interface Editor {
   changeOpacity: (value: number) => void;
   changeFontWeight: (value: number) => void;
   changeFontStyle: (value: string) => void;
+  changeFontLineThrough: (value: boolean) => void;
+  changeFontUnderline: (value: boolean) => void;
 
   addText: (value: string, options?: fabric.ITextOptions) => void;
 
@@ -194,4 +196,6 @@ export interface Editor {
   getActiveFontFamily: () => string;
   getActiveFontWeight: () => number;
   getActiveFontStyle: () => string;
+  getActiveFontLineThrough: () => boolean;
+  getActiveFontUnderline: () => boolean;
 }
