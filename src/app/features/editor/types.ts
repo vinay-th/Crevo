@@ -162,6 +162,7 @@ export type BuildEditorProps = {
 
 export interface Editor {
   delete: () => void;
+  addImage: (url: string) => void;
 
   bringForward: () => void;
   sendBackward: () => void;
