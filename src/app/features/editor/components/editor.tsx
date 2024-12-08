@@ -13,15 +13,15 @@ import StrokeColorSidebar from './StrokeColorSidebar';
 import StrokeWidthSidebar from './StrokeWidthSidebar';
 import OpacitySidebar from './OpacitySidebar';
 import TextSidebar from './TextSidebar';
-import FontSidebar from './FontSidebar';
+import { FontSidebar } from './FontSidebar';
 
 const Editor = () => {
   const [activeTool, setActiveTool] = useState<ActiveTool>('select');
+  const [isClient, setIsClient] = useState(false);
 
   const onChangeActiveTool = useCallback(
     (tool: ActiveTool) => {
       if (tool === activeTool) return setActiveTool('select');
-
       setActiveTool(tool);
     },
     [activeTool]
@@ -41,6 +41,12 @@ const Editor = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
     const canvas = new fabric.Canvas(canvasRef.current!, {
       controlsAboveOverlay: true,
       preserveObjectStacking: true,
@@ -50,10 +56,28 @@ const Editor = () => {
       initialCanvas: canvas,
       initialContainer: containerRef.current!,
     });
+
     return () => {
       canvas.dispose();
     };
-  }, [inti]);
+  }, [inti, isClient]);
+
+  if (!isClient) {
+    return (
+      <div className="h-full flex flex-col">
+        <div className="h-[64px] border-b bg-white" />
+        <div className="absolute h-[calc(100vh-68px)] w-full top-[64px] flex">
+          <div className="bg-white w-[100px] h-full border-r" />
+          <main className="bg-muted flex-1 overflow-auto relative flex flex-col">
+            <div className="h-[56px] border-b bg-white" />
+            <div className="h-[calc(100%-124px)] flex-1 bg-muted" />
+            <div className="h-[56px] border-t bg-white" />
+          </main>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-full flex flex-col">
       <Navbar activeTool={activeTool} onChangeActiveTool={onChangeActiveTool} />

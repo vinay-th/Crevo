@@ -281,7 +281,7 @@ const buildEditor = ({
       if (!selectedObject) return 400;
 
       // @ts-expect-error hota hai yrr
-      const value = selectedObject.get('fontWeight') || fontWeight;
+      const value = selectedObject.get('fontWeight') || 400;
 
       return value;
     },
