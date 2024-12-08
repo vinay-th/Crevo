@@ -14,6 +14,7 @@ import {
   EditorHookProps,
   STROKE_DASH_ARRAY,
   OPACITY,
+  TEXT_OPT,
 } from '../types';
 
 import { useAutoResize } from './use-auto-resize';
@@ -55,6 +56,15 @@ const buildEditor = ({
   };
 
   return {
+    addText: (value, options) => {
+      const object = new fabric.Textbox(value, {
+        ...TEXT_OPT,
+        fill: fillColor,
+        ...options,
+      });
+      addToCanvas(object);
+    },
+
     changeOpacity: (value: number) => {
       canvas?.getActiveObjects().forEach((object) => {
         object.set({ opacity: value });

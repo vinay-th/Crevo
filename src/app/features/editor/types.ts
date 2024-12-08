@@ -56,6 +56,8 @@ export const STROKE_WIDTH = 2;
 export const STROKE_DASH_ARRAY = [];
 export const OPACITY = 1;
 
+export const FONT_FAMILY = 'Arial';
+
 export const CIRCLE_OPT = {
   radius: 225,
   left: 100,
@@ -109,6 +111,15 @@ export const DIAMOND_OPT = {
   angle: 0,
 };
 
+export const TEXT_OPT = {
+  type: 'textbox',
+  left: 100,
+  top: 100,
+  fill: FILL_COLOR,
+  fontSize: 60,
+  fontFamily: FONT_FAMILY,
+};
+
 export interface EditorHookProps {
   clearSelectionCallback?: () => void;
 }
@@ -135,6 +146,8 @@ export interface Editor {
   changeStrokeWidth: (value: number) => void;
   changeStrokeDashArray: (value: number[]) => void;
   changeOpacity: (value: number) => void;
+
+  addText: (value: string, options?: fabric.ITextOptions) => void;
 
   addCircle: () => void;
   addSoftRect: () => void;
