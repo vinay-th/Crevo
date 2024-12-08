@@ -148,6 +148,16 @@ const buildEditor = ({
       });
       canvas?.renderAll();
     },
+    changeFontStyle: (value: string) => {
+      setFontFamily(value);
+      canvas?.getActiveObjects().forEach((object) => {
+        if (isTextType(object.type)) {
+          object._set('fontStyle', value);
+          return;
+        }
+      });
+      canvas?.renderAll();
+    },
 
     addCircle: () => {
       const object = new fabric.Circle({
@@ -282,6 +292,15 @@ const buildEditor = ({
 
       // @ts-expect-error hota hai yrr
       const value = selectedObject.get('fontWeight') || 400;
+
+      return value;
+    },
+    getActiveFontStyle: () => {
+      const selectedObject = selectedObjects[0];
+      if (!selectedObject) return 'normal';
+
+      // @ts-expect-error hota hai yrr
+      const value = selectedObject.get('fontStyle') || 'normal';
 
       return value;
     },

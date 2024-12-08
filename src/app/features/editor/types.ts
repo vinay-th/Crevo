@@ -170,6 +170,7 @@ export interface Editor {
   changeStrokeDashArray: (value: number[]) => void;
   changeOpacity: (value: number) => void;
   changeFontWeight: (value: number) => void;
+  changeFontStyle: (value: string) => void;
 
   addText: (value: string, options?: fabric.ITextOptions) => void;
 
@@ -192,4 +193,5 @@ export interface Editor {
   getActiveOpacity: () => number;
   getActiveFontFamily: () => string;
   getActiveFontWeight: () => number;
+  getActiveFontStyle: () => string;
 }

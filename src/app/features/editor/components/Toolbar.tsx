@@ -8,7 +8,7 @@ import { BsBorderWidth } from 'react-icons/bs';
 import { ArrowDown, ArrowUp, ChevronDown } from 'lucide-react';
 import { RxTransparencyGrid } from 'react-icons/rx';
 import { isTextType } from '../utils';
-import { FaBold } from 'react-icons/fa';
+import { FaBold, FaItalic } from 'react-icons/fa';
 interface ToolbarProps {
   editor: Editor | undefined;
   activeTool: ActiveTool;
@@ -19,6 +19,7 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
   const initialFillColor = editor?.getActiveFillColor();
   const initialStrokeColor = editor?.getActiveStrokeColor();
   const initialFontFamily = editor?.getActiveFontFamily();
+  const initialFontStyle = editor?.getActiveFontStyle();
 
   const initialFontWeight = editor?.getActiveFontWeight() || 400;
   const [properties, setProperties] = useState({
@@ -26,19 +27,30 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
     strokeColor: initialStrokeColor,
     fontFamily: initialFontFamily,
     fontWeight: initialFontWeight,
+    fontStyle: initialFontStyle,
   });
 
-  const selectedObjectType = editor?.selectedObjects[0]?.type;
+  const selectedObject = editor?.selectedObjects[0];
+  const selectedObjectType = selectedObject?.type;
   const isText = isTextType(selectedObjectType);
 
   const toggleBold = () => {
-    const selectedObject = editor?.selectedObjects[0];
     if (!selectedObject) return;
 
     const newVal = properties.fontWeight > 500 ? 500 : 700;
 
     editor?.changeFontWeight(newVal);
     setProperties((current) => ({ ...current, fontWeight: newVal }));
+  };
+
+  const toggleItalic = () => {
+    if (!selectedObject) return;
+
+    const isItalic = properties.fontStyle === 'italic';
+    const newVal = isItalic ? 'normal' : 'italic';
+
+    editor?.changeFontStyle(newVal);
+    setProperties((current) => ({ ...current, fontStyle: newVal }));
   };
 
   if (editor?.selectedObjects.length === 0) {
@@ -96,6 +108,20 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
               onClick={toggleBold}
             >
               <FaBold className="size-4" />
+            </Button>
+          </Hint>
+        </div>
+      )}
+      {isText && (
+        <div className="flex items-center h-full justify-center">
+          <Hint label="Italic" side="bottom" sideOffset={5}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(properties.fontStyle === 'italic' && 'bg-gray-100')}
+              onClick={toggleItalic}
+            >
+              <FaItalic className="size-4" />
             </Button>
           </Hint>
         </div>
