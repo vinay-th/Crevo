@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { BsBorderWidth } from 'react-icons/bs';
 import { ArrowDown, ArrowUp, ChevronDown } from 'lucide-react';
+import { GoTrash } from 'react-icons/go';
 import { RxTransparencyGrid } from 'react-icons/rx';
 import { isTextType } from '../utils';
 import {
@@ -16,6 +17,7 @@ import {
   FaBold,
   FaItalic,
   FaStrikethrough,
+  FaTrash,
   FaUnderline,
 } from 'react-icons/fa';
 import { FontSizeInput } from './FontSizeInput';
@@ -343,6 +345,13 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
             className={cn(activeTool === 'opacity' && 'bg-gray-100')}
           >
             <RxTransparencyGrid className="size-4" />
+          </Button>
+        </Hint>
+      </div>
+      <div className="flex items-center h-full justify-center">
+        <Hint label="Delete" side="bottom" sideOffset={5}>
+          <Button variant="ghost" size="icon" onClick={() => editor?.delete()}>
+            <GoTrash className="size-4" />
           </Button>
         </Hint>
       </div>

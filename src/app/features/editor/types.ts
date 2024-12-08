@@ -161,6 +161,8 @@ export type BuildEditorProps = {
 };
 
 export interface Editor {
+  delete: () => void;
+
   bringForward: () => void;
   sendBackward: () => void;
 

@@ -29,6 +29,7 @@ export const FontSizeInput = ({ value, onChange }: FontSizeInputProps) => {
       </Button>
       <Input
         onChange={handleChange}
+        // bhai dekh lena ek baar please
         value={value / 2}
         className="w-[50px] h-8 focus-visible:ring-offset-0 focus-visible:ring-0 rounded-none"
       />

@@ -59,6 +59,14 @@ const buildEditor = ({
   };
 
   return {
+    delete: () => {
+      canvas?.getActiveObjects().forEach((object) => {
+        canvas?.remove(object);
+        canvas?.discardActiveObject();
+        canvas?.renderAll();
+      });
+    },
+
     addText: (value, options) => {
       const object = new fabric.Textbox(value, {
         ...TEXT_OPT,
@@ -441,6 +449,12 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     strokeDashArray,
     selectedObjects,
   ]);
+
+  onkeydown = (e) => {
+    if (e.key === 'Delete') {
+      editor?.delete();
+    }
+  };
 
   const inti = useCallback(
     ({
