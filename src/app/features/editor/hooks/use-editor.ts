@@ -20,7 +20,7 @@ import {
 
 import { useAutoResize } from './use-auto-resize';
 import { useCanvasEvents } from './use-canvas-events';
-import { isTextType } from '../utils';
+import { createFilter, isTextType } from '../utils';
 
 const buildEditor = ({
   canvas,
@@ -217,6 +217,21 @@ const buildEditor = ({
         }
       });
       canvas?.renderAll();
+    },
+
+    changeFilter: (value: string) => {
+      const objects = canvas?.getActiveObjects();
+      objects?.forEach((object) => {
+        if (object.type === 'image') {
+          const imageObj = object as fabric.Image;
+
+          const effect = createFilter(value);
+
+          imageObj.filters = effect ? [effect] : [];
+          imageObj.applyFilters();
+          canvas?.renderAll();
+        }
+      });
     },
 
     addCircle: () => {
