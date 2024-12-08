@@ -15,6 +15,7 @@ import {
   STROKE_DASH_ARRAY,
   OPACITY,
   TEXT_OPT,
+  FONT_FAMILY,
 } from '../types';
 
 import { useAutoResize } from './use-auto-resize';
@@ -27,6 +28,8 @@ const buildEditor = ({
   setStrokeColor,
   setStrokeWidth,
   setStrokeDashArray,
+  setFontFamily,
+  fontFamily,
   fillColor,
   strokeColor,
   strokeWidth,
@@ -126,6 +129,18 @@ const buildEditor = ({
       });
       canvas?.renderAll();
     },
+
+    changeFontFamily: (value: string) => {
+      setFontFamily(value);
+      canvas?.getActiveObjects().forEach((object) => {
+        if (isTextType(object.type)) {
+          object._set('fontFamily', value);
+          return;
+        }
+      });
+      canvas?.renderAll();
+    },
+
     addCircle: () => {
       const object = new fabric.Circle({
         ...CIRCLE_OPT,
@@ -244,6 +259,15 @@ const buildEditor = ({
 
       return value;
     },
+    getActiveFontFamily: () => {
+      const selectedObject = selectedObjects[0];
+      if (!selectedObject) return fontFamily;
+
+      // @ts-expect-error hota hai yrr
+      const value = selectedObject.get('fontFamily') || fontFamily;
+
+      return value;
+    },
     selectedObjects,
   };
 };
@@ -252,6 +276,9 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
   const [canvas, setCanvas] = useState<null | fabric.Canvas>(null);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
+
+  const [fontFamily, setFontFamily] = useState(FONT_FAMILY);
+  const [fontSize, setFontSize] = useState('16');
 
   const [fillColor, setFillColor] = useState(FILL_COLOR);
   const [strokeColor, setStrokeColor] = useState(STROKE_COLOR);
@@ -281,11 +308,13 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
         setStrokeColor,
         setStrokeWidth,
         setStrokeDashArray,
+        setFontFamily,
         strokeDashArray,
         fillColor,
         strokeColor,
         strokeWidth,
         selectedObjects,
+        fontFamily,
       });
     }
   }, [
@@ -294,6 +323,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     setStrokeColor,
     setStrokeWidth,
     setStrokeDashArray,
+    setFontFamily,
+    fontFamily,
     fillColor,
     strokeColor,
     strokeWidth,

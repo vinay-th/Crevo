@@ -33,6 +33,27 @@ export const colors = [
   'transparent',
 ];
 
+export const fonts = [
+  'Arial',
+  'Arial Black',
+  'Verdana',
+  'Helvetica',
+  'Tahoma',
+  'Trebuchet MS',
+  'Times New Roman',
+  'Georgia',
+  'Garamond',
+  'Courier New',
+  'Brush Script MT',
+  'Palatino',
+  'Bookman',
+  'Comic Sans MS',
+  'Impact',
+  'Lucida Sans Unicode',
+  'Geneva',
+  'Lucida Console',
+];
+
 export type ActiveTool =
   | 'select'
   | 'shapes'
@@ -135,6 +156,8 @@ export type BuildEditorProps = {
   selectedObjects: fabric.Object[];
   strokeDashArray: number[];
   setStrokeDashArray: (value: number[]) => void;
+  fontFamily: string;
+  setFontFamily: (value: string) => void;
 };
 
 export interface Editor {
@@ -156,6 +179,8 @@ export interface Editor {
   addInverseTriangle: () => void;
   addDiamond: () => void;
 
+  changeFontFamily: (value: string) => void;
+
   canvas: fabric.Canvas | null;
   selectedObjects: fabric.Object[];
 
@@ -164,4 +189,5 @@ export interface Editor {
   getActiveStrokeWidth: () => number;
   getActiveStrokeDashArray: () => number[];
   getActiveOpacity: () => number;
+  getActiveFontFamily: () => string;
 }
