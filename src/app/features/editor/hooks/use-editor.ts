@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo } from 'react';
+import { useCallback, useState, useMemo, useEffect } from 'react';
 import { fabric } from 'fabric';
 import {
   BuildEditorProps,
@@ -450,11 +450,19 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     selectedObjects,
   ]);
 
-  onkeydown = (e) => {
-    if (e.key === 'Delete') {
-      editor?.delete();
-    }
-  };
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Delete') {
+        editor?.delete();
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [editor]);
 
   const inti = useCallback(
     ({
