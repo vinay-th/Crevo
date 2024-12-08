@@ -68,13 +68,6 @@ const buildEditor = ({
       addToCanvas(object);
     },
 
-    changeOpacity: (value: number) => {
-      canvas?.getActiveObjects().forEach((object) => {
-        object.set({ opacity: value });
-      });
-      canvas?.renderAll();
-    },
-
     bringForward: () => {
       canvas?.getActiveObjects().forEach((object) => {
         canvas?.bringForward(object);
@@ -85,7 +78,6 @@ const buildEditor = ({
       const workspace = getWorkspace();
       workspace?.sendToBack();
     },
-
     sendBackward: () => {
       canvas?.getActiveObjects().forEach((object) => {
         canvas?.sendBackwards(object);
@@ -96,6 +88,22 @@ const buildEditor = ({
       canvas?.renderAll();
     },
 
+    changeOpacity: (value: number) => {
+      canvas?.getActiveObjects().forEach((object) => {
+        object.set({ opacity: value });
+      });
+      canvas?.renderAll();
+    },
+    changeFontWeight: (value: number) => {
+      canvas?.getActiveObjects().forEach((object) => {
+        if (isTextType(object.type)) {
+          // @ts-expect-error meri marzi bhai
+          object.set({ fontWeight: value });
+          return;
+        }
+      });
+      canvas?.renderAll();
+    },
     changeFillColor: (value: string) => {
       setFillColor(value);
       canvas?.getActiveObjects().forEach((object) => {
@@ -265,6 +273,15 @@ const buildEditor = ({
 
       // @ts-expect-error hota hai yrr
       const value = selectedObject.get('fontFamily') || fontFamily;
+
+      return value;
+    },
+    getActiveFontWeight: () => {
+      const selectedObject = selectedObjects[0];
+      if (!selectedObject) return 400;
+
+      // @ts-expect-error hota hai yrr
+      const value = selectedObject.get('fontWeight') || fontWeight;
 
       return value;
     },
