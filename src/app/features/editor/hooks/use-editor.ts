@@ -176,6 +176,15 @@ const buildEditor = ({
       });
       canvas?.renderAll();
     },
+    changeTextAlign: (value: string) => {
+      canvas?.getActiveObjects().forEach((object) => {
+        if (isTextType(object.type)) {
+          object._set('textAlign', value);
+          return;
+        }
+      });
+      canvas?.renderAll();
+    },
 
     addCircle: () => {
       const object = new fabric.Circle({
@@ -337,6 +346,15 @@ const buildEditor = ({
 
       // @ts-expect-error hota hai yrr
       const value = selectedObject.get('underline') || false;
+
+      return value;
+    },
+    getActiveTextAlign: () => {
+      const selectedObject = selectedObjects[0];
+      if (!selectedObject) return 'left';
+
+      // @ts-expect-error hota hai yrr
+      const value = selectedObject.get('textAlign') || 'left';
 
       return value;
     },
