@@ -6,7 +6,7 @@ import { ToolSidebarClose } from '@/components/crevo/ToolsidebarClose';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Plus } from 'lucide-react';
 import { fabric } from 'fabric';
 
 interface AiSidebarProps {
@@ -44,8 +44,6 @@ export const AiSidebar = ({
       console.error('Rendered image not found');
       return;
     }
-
-    // Create a temporary canvas to extract the rendered image
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
 
@@ -82,7 +80,7 @@ export const AiSidebar = ({
       )}
     >
       <ToolbarSidebarHeader
-        title="Ai"
+        title="AI"
         description="Generate an image using AI"
       />
       <ScrollArea>
@@ -99,9 +97,9 @@ export const AiSidebar = ({
             Generate
             <Sparkles className="ml-2" />
           </Button>
-          <div className="mt-4">
+          <div className="mt-4 relative">
             {imageSrc && (
-              <div className="">
+              <div className="relative group">
                 <img
                   src={imageSrc}
                   alt="Generated image"
@@ -110,8 +108,11 @@ export const AiSidebar = ({
                   className="object-contain"
                   crossOrigin="anonymous"
                 />
-                <Button onClick={addToWorkspace} className="w-full">
-                  Add to Workspace
+                <Button
+                  onClick={addToWorkspace}
+                  className="absolute inset-0 flex items-center justify-center bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <Plus className="mr-2" /> Add to Workspace
                 </Button>
               </div>
             )}
