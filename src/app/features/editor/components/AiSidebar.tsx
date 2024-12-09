@@ -6,6 +6,7 @@ import { ToolSidebarClose } from '@/components/crevo/ToolsidebarClose';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { Sparkles } from 'lucide-react';
 
 interface AiSidebarProps {
   editor: Editor | undefined;
@@ -19,7 +20,7 @@ export const AiSidebar = ({
   onChangeActiveTool,
 }: AiSidebarProps) => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [text, setText] = useState<string>(''); // State to track textarea input
+  const [text, setText] = useState<string>('');
 
   const onClose = () => {
     onChangeActiveTool('select');
@@ -52,10 +53,11 @@ export const AiSidebar = ({
             rows={10}
             minLength={3}
             value={text}
-            onChange={(e) => setText(e.target.value)} // Update text state
+            onChange={(e) => setText(e.target.value)}
           />
           <Button onClick={handleClick} className="w-full">
             Generate
+            <Sparkles className="ml-2" />
           </Button>
           <div className="mt-4">
             {imageSrc && (
