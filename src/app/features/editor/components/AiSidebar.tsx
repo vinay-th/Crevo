@@ -7,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Sparkles } from 'lucide-react';
+import { fabric } from 'fabric';
 
 interface AiSidebarProps {
   editor: Editor | undefined;
@@ -32,6 +33,45 @@ export const AiSidebar = ({
         text
       )}`
     );
+  };
+
+  const addToWorkspace = () => {
+    const imgElement = document.querySelector<HTMLImageElement>(
+      'img[alt="Generated image"]'
+    );
+
+    if (!imgElement) {
+      console.error('Rendered image not found');
+      return;
+    }
+
+    // Create a temporary canvas to extract the rendered image
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) {
+      console.error('Failed to get canvas context');
+      return;
+    }
+
+    // Set canvas dimensions to match the image
+    canvas.width = imgElement.naturalWidth;
+    canvas.height = imgElement.naturalHeight;
+
+    // Draw the image onto the canvas
+    ctx.drawImage(imgElement, 0, 0);
+
+    // Convert the canvas content to a Data URL
+    const base64data = canvas.toDataURL('image/png');
+
+    // Add the image to the Fabric.js canvas
+    fabric.Image.fromURL(base64data, (img) => {
+      if (editor) {
+        const fabricCanvas = editor.canvas;
+        fabricCanvas?.add(img);
+        fabricCanvas?.renderAll();
+      }
+    });
   };
 
   return (
@@ -61,13 +101,19 @@ export const AiSidebar = ({
           </Button>
           <div className="mt-4">
             {imageSrc && (
-              <img
-                src={imageSrc}
-                alt="Generated image"
-                width={860}
-                height={860}
-                className="object-contain"
-              />
+              <div className="">
+                <img
+                  src={imageSrc}
+                  alt="Generated image"
+                  width={860}
+                  height={860}
+                  className="object-contain"
+                  crossOrigin="anonymous"
+                />
+                <Button onClick={addToWorkspace} className="w-full">
+                  Add to Workspace
+                </Button>
+              </div>
             )}
           </div>
         </div>
