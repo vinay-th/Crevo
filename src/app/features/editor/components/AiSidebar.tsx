@@ -22,6 +22,7 @@ export const AiSidebar = ({
 }: AiSidebarProps) => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [text, setText] = useState<string>('');
+  const [imageData, setImageData] = useState<string | null>(null);
 
   const onClose = () => {
     onChangeActiveTool('select');
@@ -61,6 +62,7 @@ export const AiSidebar = ({
 
     // Convert the canvas content to a Data URL
     const base64data = canvas.toDataURL('image/png');
+    setImageData(base64data);
 
     // Add the image to the Fabric.js canvas
     fabric.Image.fromURL(base64data, (img) => {

@@ -232,4 +232,6 @@ export interface Editor {
   getActiveFontUnderline: () => boolean;
   getActiveTextAlign: () => string;
   getActiveFontSize: () => number;
+
+  removeBg: () => void;
 }

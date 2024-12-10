@@ -418,6 +418,18 @@ const buildEditor = ({
 
       return value;
     },
+
+    removeBg: () => {
+      const object = selectedObjects[0];
+      if (!object) return;
+
+      if (object.type === 'image') {
+        // @ts-expect-error hota hai yrr
+        const base64data = object.toDataURL('image/png');
+        const data = base64data.replace(/^.*;base64,/, '');
+      }
+    },
+
     selectedObjects,
   };
 };

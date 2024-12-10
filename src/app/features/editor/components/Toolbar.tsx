@@ -19,7 +19,7 @@ import {
   FaStrikethrough,
   FaUnderline,
 } from 'react-icons/fa';
-import { TbColorFilter } from 'react-icons/tb';
+import { TbBackground, TbColorFilter } from 'react-icons/tb';
 import { FontSizeInput } from './FontSizeInput';
 interface ToolbarProps {
   editor: Editor | undefined;
@@ -331,6 +331,22 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
               }}
             >
               <TbColorFilter className="size-4" />
+            </Button>
+          </Hint>
+        </div>
+      )}
+      {isImage && (
+        <div className="flex items-center h-full justify-center">
+          <Hint label="Remove Background" side="bottom" sideOffset={5}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(activeTool === 'remove-bg' && 'bg-gray-100')}
+              onClick={() => {
+                onChangeActiveTool('remove-bg');
+              }}
+            >
+              <TbBackground className="size-4" />
             </Button>
           </Hint>
         </div>
