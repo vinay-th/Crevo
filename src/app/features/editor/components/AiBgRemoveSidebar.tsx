@@ -21,7 +21,7 @@ export const AiBgRemoveSidebar = ({
     onChangeActiveTool('select');
   };
 
-  const handleClick = () => {
+  const handleClick = async () => {
     editor?.removeBg();
   };
 

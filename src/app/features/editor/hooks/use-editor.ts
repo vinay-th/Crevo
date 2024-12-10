@@ -419,7 +419,7 @@ const buildEditor = ({
       return value;
     },
 
-    removeBg: () => {
+    removeBg: async () => {
       const object = selectedObjects[0];
       if (!object) return;
 
@@ -427,6 +427,43 @@ const buildEditor = ({
         // @ts-expect-error hota hai yrr
         const base64data = object.toDataURL('image/png');
         const data = base64data.replace(/^.*;base64,/, '');
+
+        try {
+          const response = await fetch(
+            'http://localhost:3000/api/images/upload-to-imgg',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ imageBase64: data }),
+            }
+          );
+          if (!response.ok) {
+            throw new Error('Failed to upload image');
+          }
+
+          const result = await response.json();
+          canvas?.remove(object);
+          canvas?.renderAll();
+          const url = result.data.data.url;
+          console.log(url);
+          fabric.Image.fromURL(
+            url,
+            (image) => {
+              const workspace = getWorkspace();
+              image.scaleToWidth(workspace?.width || 0);
+              image.scaleToHeight(workspace?.height || 0);
+
+              addToCanvas(image);
+            },
+            {
+              crossOrigin: 'anonymous',
+            }
+          );
+        } catch (error) {
+          console.error('Error uploading image:', error);
+        }
       }
     },
 
