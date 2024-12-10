@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { Providers } from '@/components/providers';
 
 export const metadata: Metadata = {
   title: 'Crevo',
@@ -19,7 +20,9 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="favicon.ico" type="image/x-icon" />
       </head>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

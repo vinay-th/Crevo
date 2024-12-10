@@ -20,7 +20,7 @@ import {
 
 import { useAutoResize } from './use-auto-resize';
 import { useCanvasEvents } from './use-canvas-events';
-import { isTextType } from '../utils';
+import { createFilter, isTextType } from '../utils';
 
 const buildEditor = ({
   canvas,
@@ -59,6 +59,22 @@ const buildEditor = ({
   };
 
   return {
+    addImage: (url: string) => {
+      fabric.Image.fromURL(
+        url,
+        (image) => {
+          const workspace = getWorkspace();
+          image.scaleToWidth(workspace?.width || 0);
+          image.scaleToHeight(workspace?.height || 0);
+
+          addToCanvas(image);
+        },
+        {
+          crossOrigin: 'anonymous',
+        }
+      );
+    },
+
     delete: () => {
       canvas?.getActiveObjects().forEach((object) => {
         canvas?.remove(object);
@@ -201,6 +217,21 @@ const buildEditor = ({
         }
       });
       canvas?.renderAll();
+    },
+
+    changeFilter: (value: string) => {
+      const objects = canvas?.getActiveObjects();
+      objects?.forEach((object) => {
+        if (object.type === 'image') {
+          const imageObj = object as fabric.Image;
+
+          const effect = createFilter(value);
+
+          imageObj.filters = effect ? [effect] : [];
+          imageObj.applyFilters();
+          canvas?.renderAll();
+        }
+      });
     },
 
     addCircle: () => {
@@ -387,6 +418,71 @@ const buildEditor = ({
 
       return value;
     },
+
+    removeBg: async () => {
+      const object = selectedObjects[0];
+      if (!object) return;
+
+      if (object.type === 'image') {
+        // @ts-expect-error hota hai yrr
+        const base64data = object.toDataURL('image/png');
+        const data = base64data.replace(/^.*;base64,/, '');
+
+        try {
+          const response = await fetch(
+            'http://localhost:3000/api/images/upload-to-imgg',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ imageBase64: data }),
+            }
+          );
+          if (!response.ok) {
+            throw new Error('Failed to upload image');
+          }
+
+          const result = await response.json();
+          canvas?.remove(object);
+          canvas?.renderAll();
+          const url = result.data.data.url;
+
+          const removeBgResponse = await fetch(
+            'http://localhost:3000/api/images/remove-bg',
+            {
+              method: 'POST',
+              headers: new Headers({
+                'Content-Type': 'application/json',
+              }),
+              body: JSON.stringify({
+                image: url,
+              }),
+            }
+          );
+
+          const responseData = await removeBgResponse.json();
+          const bgRemovedUrl = responseData.data.result_url;
+
+          fabric.Image.fromURL(
+            bgRemovedUrl,
+            (image) => {
+              const workspace = getWorkspace();
+              image.scaleToWidth(workspace?.width || 0);
+              image.scaleToHeight(workspace?.height || 0);
+
+              addToCanvas(image);
+            },
+            {
+              crossOrigin: 'anonymous',
+            }
+          );
+        } catch (error) {
+          console.error('Error uploading image:', error);
+        }
+      }
+    },
+
     selectedObjects,
   };
 };

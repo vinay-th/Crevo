@@ -54,6 +54,32 @@ export const fonts = [
   'Lucida Console',
 ];
 
+export const filters = [
+  'none',
+  'polaroid',
+  'sepia',
+  'kodachrome',
+  'contrast',
+  'brightness',
+  'greyscale',
+  'brownie',
+  'vintage',
+  'technicolor',
+  'pixelate',
+  'invert',
+  'blur',
+  'sharpen',
+  'emboss',
+  'removecolor',
+  'blacknwhite',
+  'vibrance',
+  'blendcolor',
+  'huerotate',
+  'resize',
+  'saturation',
+  'gamma',
+];
+
 export type ActiveTool =
   | 'select'
   | 'shapes'
@@ -162,6 +188,7 @@ export type BuildEditorProps = {
 
 export interface Editor {
   delete: () => void;
+  addImage: (url: string) => void;
 
   bringForward: () => void;
   sendBackward: () => void;
@@ -177,6 +204,7 @@ export interface Editor {
   changeFontUnderline: (value: boolean) => void;
   changeTextAlign: (value: string) => void;
   changeFontSize: (value: number) => void;
+  changeFilter: (value: string) => void;
 
   addText: (value: string, options?: fabric.ITextOptions) => void;
 
@@ -204,4 +232,6 @@ export interface Editor {
   getActiveFontUnderline: () => boolean;
   getActiveTextAlign: () => string;
   getActiveFontSize: () => number;
+
+  removeBg: () => void;
 }

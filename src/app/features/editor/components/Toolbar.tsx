@@ -8,7 +8,7 @@ import { BsBorderWidth } from 'react-icons/bs';
 import { ArrowDown, ArrowUp, ChevronDown } from 'lucide-react';
 import { GoTrash } from 'react-icons/go';
 import { RxTransparencyGrid } from 'react-icons/rx';
-import { isTextType } from '../utils';
+import { isTextType, isImageType } from '../utils';
 import {
   FaAlignCenter,
   FaAlignJustify,
@@ -17,9 +17,9 @@ import {
   FaBold,
   FaItalic,
   FaStrikethrough,
-  FaTrash,
   FaUnderline,
 } from 'react-icons/fa';
+import { TbBackground, TbColorFilter } from 'react-icons/tb';
 import { FontSizeInput } from './FontSizeInput';
 interface ToolbarProps {
   editor: Editor | undefined;
@@ -53,7 +53,9 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
 
   const selectedObject = editor?.selectedObjects[0];
   const selectedObjectType = selectedObject?.type;
+
   const isText = isTextType(selectedObjectType);
+  const isImage = isImageType(selectedObjectType);
 
   const onChangeTextAlign = (value: string) => {
     if (!selectedObject) return;
@@ -112,23 +114,25 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
 
   return (
     <div className="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto p-2 gap-x-2">
-      <div className="flex items-center h-full justify-center">
-        <Hint label="Color" side="bottom" sideOffset={5}>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => onChangeActiveTool('fill')}
-            className={cn(activeTool === 'fill' && 'bg-gray-100')}
-          >
-            <div
-              className="rounded-sm size-4 border"
-              style={{
-                backgroundColor: `${properties.fillColor}`,
-              }}
-            />
-          </Button>
-        </Hint>
-      </div>
+      {!isImage && (
+        <div className="flex items-center h-full justify-center">
+          <Hint label="Color" side="bottom" sideOffset={5}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onChangeActiveTool('fill')}
+              className={cn(activeTool === 'fill' && 'bg-gray-100')}
+            >
+              <div
+                className="rounded-sm size-4 border"
+                style={{
+                  backgroundColor: `${properties.fillColor}`,
+                }}
+              />
+            </Button>
+          </Hint>
+        </div>
+      )}
       {isText && (
         <div className="flex items-center h-full justify-center">
           <Hint label="Font" side="bottom" sideOffset={5}>
@@ -281,6 +285,7 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
           />
         </div>
       )}
+
       {!isText && (
         <>
           <div className="flex items-center h-full justify-center">
@@ -313,6 +318,38 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
             </Hint>
           </div>
         </>
+      )}
+      {isImage && (
+        <div className="flex items-center h-full justify-center">
+          <Hint label="Add Filter" side="bottom" sideOffset={5}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(activeTool === 'filter' && 'bg-gray-100')}
+              onClick={() => {
+                onChangeActiveTool('filter');
+              }}
+            >
+              <TbColorFilter className="size-4" />
+            </Button>
+          </Hint>
+        </div>
+      )}
+      {isImage && (
+        <div className="flex items-center h-full justify-center">
+          <Hint label="Remove Background" side="bottom" sideOffset={5}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(activeTool === 'remove-bg' && 'bg-gray-100')}
+              onClick={() => {
+                onChangeActiveTool('remove-bg');
+              }}
+            >
+              <TbBackground className="size-4" />
+            </Button>
+          </Hint>
+        </div>
       )}
       <div className="flex items-center h-full justify-center">
         <Hint label="Bring to front" side="bottom" sideOffset={5}>
