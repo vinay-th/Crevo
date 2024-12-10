@@ -62,7 +62,6 @@ const app = new Hono()
     try {
       // Retrieve the url of the image from the request body
       const { image } = await c.req.json();
-      console.log('Image URL:', image);
 
       if (image) {
         const removeBgResponse = await fetch(

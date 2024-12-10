@@ -447,9 +447,25 @@ const buildEditor = ({
           canvas?.remove(object);
           canvas?.renderAll();
           const url = result.data.data.url;
-          console.log(url);
+
+          const removeBgResponse = await fetch(
+            'http://localhost:3000/api/images/remove-bg',
+            {
+              method: 'POST',
+              headers: new Headers({
+                'Content-Type': 'application/json',
+              }),
+              body: JSON.stringify({
+                image: url,
+              }),
+            }
+          );
+
+          const responseData = await removeBgResponse.json();
+          const bgRemovedUrl = responseData.data.result_url;
+
           fabric.Image.fromURL(
-            url,
+            bgRemovedUrl,
             (image) => {
               const workspace = getWorkspace();
               image.scaleToWidth(workspace?.width || 0);
