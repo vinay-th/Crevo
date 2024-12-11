@@ -27,13 +27,15 @@ import {
 } from 'react-icons/bs';
 import { ActiveTool } from '../types';
 import { cn } from '@/lib/utils';
+import { Editor } from '../types';
 
 interface NavbarProps {
   activeTool: ActiveTool;
+  editor?: Editor | undefined;
   onChangeActiveTool: (tool: ActiveTool) => void;
 }
 
-const Navbar = ({ activeTool, onChangeActiveTool }: NavbarProps) => {
+const Navbar = ({ activeTool, onChangeActiveTool, editor }: NavbarProps) => {
   return (
     <nav className="w-full flex items-center p-4 h-[64px] gap-x-8 border-b lg:pl-[34px]">
       <Logo />
@@ -72,12 +74,26 @@ const Navbar = ({ activeTool, onChangeActiveTool }: NavbarProps) => {
           </Button>
         </Hint>
         <Hint label="Undo" side="bottom" sideOffset={10}>
-          <Button variant="ghost" size="icon" onClick={() => {}} className="">
+          <Button
+            disabled={!editor?.canUndo()}
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              editor?.onUndo();
+            }}
+          >
             <Undo2 className="size-4" />
           </Button>
         </Hint>
         <Hint label="Redo" side="bottom" sideOffset={10}>
-          <Button variant="ghost" size="icon" onClick={() => {}} className="">
+          <Button
+            disabled={!editor?.canRedo()}
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              editor?.onRedo();
+            }}
+          >
             <Redo2 className="size-4" />
           </Button>
         </Hint>

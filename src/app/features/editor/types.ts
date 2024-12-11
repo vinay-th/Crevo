@@ -1,6 +1,17 @@
 import { fabric } from 'fabric';
 import * as material from 'material-colors';
 
+export const JSON_KEYS = [
+  'name',
+  'gradientAngle',
+  'selectable',
+  'hasControls',
+  'linkData',
+  'editable',
+  'extensionType',
+  'extension',
+];
+
 export const selectionDependentTools = [
   'fill',
   'font',
@@ -176,6 +187,11 @@ export type BuildEditorProps = {
   canvas: fabric.Canvas | null;
   copy: () => void;
   paste: () => void;
+  save: (skip?: boolean) => void;
+  undo: () => void;
+  redo: () => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
   fillColor: string;
   setFillColor: (value: string) => void;
   strokeColor: string;
@@ -207,6 +223,11 @@ export interface Editor {
 
   onCopy: () => void;
   onPaste: () => void;
+
+  onUndo: () => void;
+  onRedo: () => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
 
   bringForward: () => void;
   sendBackward: () => void;
