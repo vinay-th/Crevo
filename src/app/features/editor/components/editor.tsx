@@ -178,7 +178,7 @@ const Editor = () => {
           >
             <canvas className="my-canvas" ref={canvasRef} />
           </div>
-          <Footer />
+          <Footer editor={editor} />
         </main>
       </div>
     </div>
