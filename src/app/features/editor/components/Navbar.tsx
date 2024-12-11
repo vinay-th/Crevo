@@ -78,9 +78,7 @@ const Navbar = ({ activeTool, onChangeActiveTool, editor }: NavbarProps) => {
             disabled={!editor?.canUndo()}
             variant="ghost"
             size="icon"
-            onClick={() => {
-              editor?.onUndo();
-            }}
+            onClick={() => editor?.onUndo()}
           >
             <Undo2 className="size-4" />
           </Button>
@@ -90,9 +88,7 @@ const Navbar = ({ activeTool, onChangeActiveTool, editor }: NavbarProps) => {
             disabled={!editor?.canRedo()}
             variant="ghost"
             size="icon"
-            onClick={() => {
-              editor?.onRedo();
-            }}
+            onClick={() => editor?.onRedo()}
           >
             <Redo2 className="size-4" />
           </Button>
