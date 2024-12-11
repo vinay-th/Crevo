@@ -62,6 +62,22 @@ const buildEditor = ({
   };
 
   return {
+    enableDrawingMode: () => {
+      canvas?.discardActiveObject();
+      canvas?.renderAll();
+      if (canvas) {
+        canvas.isDrawingMode = true;
+        canvas.freeDrawingBrush.width = STROKE_WIDTH;
+        canvas.freeDrawingBrush.color = STROKE_COLOR;
+      }
+    },
+
+    disableDrawingMode: () => {
+      if (canvas) {
+        canvas.isDrawingMode = false;
+      }
+    },
+
     onCopy: () => copy(),
     onPaste: () => paste(),
 
@@ -151,6 +167,9 @@ const buildEditor = ({
         }
         object.set({ stroke: value });
       });
+      if (canvas) {
+        canvas.freeDrawingBrush.color = value;
+      }
       canvas?.renderAll();
     },
     changeStrokeWidth: (value: number) => {
@@ -158,6 +177,9 @@ const buildEditor = ({
       canvas?.getActiveObjects().forEach((object) => {
         object.set({ strokeWidth: value });
       });
+      if (canvas) {
+        canvas.freeDrawingBrush.width = value;
+      }
       canvas?.renderAll();
     },
     changeStrokeDashArray: (value: number[]) => {

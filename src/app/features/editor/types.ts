@@ -192,6 +192,9 @@ export interface Editor {
   delete: () => void;
   addImage: (url: string) => void;
 
+  enableDrawingMode: () => void;
+  disableDrawingMode: () => void;
+
   onCopy: () => void;
   onPaste: () => void;
 
