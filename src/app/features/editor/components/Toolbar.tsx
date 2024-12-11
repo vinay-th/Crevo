@@ -5,7 +5,7 @@ import { Hint } from '@/components/crevo/Hint';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { BsBorderWidth } from 'react-icons/bs';
-import { ArrowDown, ArrowUp, ChevronDown } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronDown, CopyIcon } from 'lucide-react';
 import { GoTrash } from 'react-icons/go';
 import { RxTransparencyGrid } from 'react-icons/rx';
 import { isTextType, isImageType } from '../utils';
@@ -389,6 +389,20 @@ const Toolbar = ({ editor, activeTool, onChangeActiveTool }: ToolbarProps) => {
         <Hint label="Delete" side="bottom" sideOffset={5}>
           <Button variant="ghost" size="icon" onClick={() => editor?.delete()}>
             <GoTrash className="size-4" />
+          </Button>
+        </Hint>
+      </div>
+      <div className="flex items-center h-full justify-center">
+        <Hint label="Duplicate" side="bottom" sideOffset={5}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              editor?.onCopy();
+              editor?.onPaste();
+            }}
+          >
+            <CopyIcon className="size-4" />
           </Button>
         </Hint>
       </div>

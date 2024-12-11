@@ -173,6 +173,8 @@ export interface EditorHookProps {
 
 export type BuildEditorProps = {
   canvas: fabric.Canvas | null;
+  copy: () => void;
+  paste: () => void;
   fillColor: string;
   setFillColor: (value: string) => void;
   strokeColor: string;
@@ -189,6 +191,9 @@ export type BuildEditorProps = {
 export interface Editor {
   delete: () => void;
   addImage: (url: string) => void;
+
+  onCopy: () => void;
+  onPaste: () => void;
 
   bringForward: () => void;
   sendBackward: () => void;

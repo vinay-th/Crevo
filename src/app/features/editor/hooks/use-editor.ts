@@ -21,9 +21,12 @@ import {
 import { useAutoResize } from './use-auto-resize';
 import { useCanvasEvents } from './use-canvas-events';
 import { createFilter, isTextType } from '../utils';
+import { useClipboard } from './use-clipboard';
 
 const buildEditor = ({
   canvas,
+  copy,
+  paste,
   setFillColor,
   setStrokeColor,
   setStrokeWidth,
@@ -59,6 +62,9 @@ const buildEditor = ({
   };
 
   return {
+    onCopy: () => copy(),
+    onPaste: () => paste(),
+
     addImage: (url: string) => {
       fabric.Image.fromURL(
         url,
@@ -500,7 +506,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
   const [strokeWidth, setStrokeWidth] = useState(STROKE_WIDTH);
   const [strokeDashArray, setStrokeDashArray] =
     useState<number[]>(STROKE_DASH_ARRAY);
-  // const [fontSize, setFontSize] = useState(16);
+
+  const { copy, paste } = useClipboard({ canvas });
 
   useAutoResize({
     canvas,
@@ -518,6 +525,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     if (canvas) {
       return buildEditor({
         canvas,
+        copy,
+        paste,
         setFillColor,
         setStrokeColor,
         setStrokeWidth,
@@ -533,6 +542,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
     }
   }, [
     canvas,
+    copy,
+    paste,
     setFillColor,
     setStrokeColor,
     setStrokeWidth,
