@@ -33,6 +33,7 @@ export const useHistory = ({ canvas }: useHistoryProps) => {
       }
 
       // ToDo Save callback
+      // Save to DB
     },
     [canvas]
   );
