@@ -21,7 +21,12 @@ import {
 
 import { useAutoResize } from './use-auto-resize';
 import { useCanvasEvents } from './use-canvas-events';
-import { createFilter, isTextType } from '../utils';
+import {
+  createFilter,
+  downloadFile,
+  isTextType,
+  transformText,
+} from '../utils';
 import { useClipboard } from './use-clipboard';
 import { useHistory } from './use-history';
 import { useHotkeys } from './use-hotkeys';
@@ -48,6 +53,68 @@ const buildEditor = ({
   strokeDashArray,
   selectedObjects,
 }: BuildEditorProps): Editor => {
+  const generateSaveOptions = () => {
+    const { width, height, left, top } = getWorkspace() as fabric.Rect;
+
+    return {
+      name: 'Image',
+      format: 'png',
+      quality: 1,
+      width,
+      height,
+      left,
+      top,
+    };
+  };
+
+  const savePng = () => {
+    const options = generateSaveOptions();
+
+    canvas?.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    if (canvas) {
+      const dataUrl = canvas.toDataURL(options);
+      downloadFile(dataUrl, 'png');
+    }
+  };
+
+  const saveSvg = () => {
+    const options = generateSaveOptions();
+
+    canvas?.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    if (canvas) {
+      const dataUrl = canvas.toDataURL(options);
+      downloadFile(dataUrl, 'svg');
+    }
+  };
+
+  const saveJpg = () => {
+    const options = generateSaveOptions();
+
+    canvas?.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    if (canvas) {
+      const dataUrl = canvas.toDataURL(options);
+      downloadFile(dataUrl, 'jpg');
+    }
+  };
+
+  const saveJson = async () => {
+    const dataUrl = canvas?.toJSON(JSON_KEYS);
+    await transformText(dataUrl?.objects);
+
+    const fileStrings = `data:text/json;charset=utf-8,${encodeURIComponent(
+      JSON.stringify(dataUrl, null, '\t')
+    )}`;
+
+    downloadFile(fileStrings, 'json');
+  };
+
+  const loadJson = (json: string) => {
+    const data = JSON.parse(json);
+    canvas?.loadFromJSON(data, () => {
+      autoZoom();
+    });
+  };
+
   const getWorkspace = () => {
     return (
       canvas?.getObjects().find((object) => object.name === 'clip') || null
@@ -71,6 +138,12 @@ const buildEditor = ({
   };
 
   return {
+    saveJson,
+    loadJson,
+    savePng,
+    saveSvg,
+    saveJpg,
+
     getWorkspace,
     autoZoom,
 
