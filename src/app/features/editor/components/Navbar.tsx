@@ -29,6 +29,7 @@ import { ActiveTool } from '../types';
 import { cn } from '@/lib/utils';
 import { Editor } from '../types';
 import { useFilePicker } from 'use-file-picker';
+import { UserButton } from '../../auth/components/UserButton';
 
 interface NavbarProps {
   activeTool: ActiveTool;
@@ -182,7 +183,7 @@ const Navbar = ({ activeTool, onChangeActiveTool, editor }: NavbarProps) => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* ToDO Add User Btn */}
+          <UserButton />
         </div>
       </div>
     </nav>
