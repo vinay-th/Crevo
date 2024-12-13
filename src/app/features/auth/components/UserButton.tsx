@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { CreditCard, Loader, LogOut } from 'lucide-react';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 
 export const UserButton = () => {
   const session = useSession();
@@ -28,6 +28,7 @@ export const UserButton = () => {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger>
+        {/* Add crown if user is premium */}
         <Avatar className="size-10 hover:opacity-75 transition">
           <AvatarImage alt={name} src={imageUrl || ''} />
           <AvatarFallback className="bg-blue-500 font-medium text-white">
@@ -41,7 +42,11 @@ export const UserButton = () => {
           Billing
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem disabled={false} onClick={() => {}} className="h-10">
+        <DropdownMenuItem
+          disabled={false}
+          onClick={() => signOut()}
+          className="h-10"
+        >
           <LogOut className="mr-2 h-4 w-4" />
           Log Out
         </DropdownMenuItem>
