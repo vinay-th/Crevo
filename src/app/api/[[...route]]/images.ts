@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { unsplash } from '@/lib/unsplash';
+import { verifyAuth } from '@hono/auth-js';
 
 const DEFAULT_COUNT = 50;
 const DEFAULT_COLLECTION_IDS = ['317099'];
@@ -7,7 +8,7 @@ const IMGBB_API_KEY = process.env.IMGBB_API_KEY;
 const BRIA_API_TOKEN = process.env.BRIA_API_TOKEN;
 
 const app = new Hono()
-  .get('/', async (c) => {
+  .get('/', verifyAuth(), async (c) => {
     const images = await unsplash.photos.getRandom({
       collectionIds: DEFAULT_COLLECTION_IDS,
       count: DEFAULT_COUNT,
@@ -25,7 +26,7 @@ const app = new Hono()
 
     return c.json({ data: response });
   })
-  .post('/upload-to-imgg', async (c) => {
+  .post('/upload-to-imgg', verifyAuth(), async (c) => {
     try {
       // Retrieve the Base64 image string from the request body
       const { imageBase64 } = await c.req.json();
@@ -58,7 +59,7 @@ const app = new Hono()
       return c.json({ error: 'Internal server error' }, 500);
     }
   })
-  .post('/remove-bg', async (c) => {
+  .post('/remove-bg', verifyAuth(), async (c) => {
     try {
       // Retrieve the url of the image from the request body
       const { image } = await c.req.json();

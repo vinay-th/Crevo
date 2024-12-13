@@ -12,7 +12,9 @@
     "db:studio": "npx drizzle-kit studio"
   },
   "dependencies": {
+    "@auth/core": "^0.37.4",
     "@auth/drizzle-adapter": "^1.7.4",
+    "@hono/auth-js": "^1.0.15",
     "@hono/zod-validator": "^0.4.1",
     "@neondatabase/serverless": "^0.10.4",
     "@radix-ui/react-checkbox": "^1.1.3",

@@ -6,9 +6,11 @@ import { zValidator } from '@hono/zod-validator';
 
 import { db } from '@/db/drizzle';
 import { users } from '@/db/schema';
+import { verifyAuth } from '@hono/auth-js';
 
 const app = new Hono().post(
   '/',
+  verifyAuth(),
   zValidator(
     'json',
     z.object({
