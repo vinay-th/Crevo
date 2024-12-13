@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
-import * as z from 'zod';
-import { Loader2 } from 'lucide-react';
+import { Loader2, TriangleAlert } from 'lucide-react';
 import Link from 'next/link';
 
+import { useSignUp } from '@/app/features/auth/hooks/useSignUp';
 import { BackgroundBeamsWithCollision } from '@/components/ui/background-beams';
 
 import { Button } from '@/components/ui/button';
@@ -20,17 +20,22 @@ import { Label } from '@/components/ui/label';
 import { FaGithub } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { signIn } from 'next-auth/react';
-
-const signInSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  rememberMe: z.boolean().default(false),
-});
-
-type SignInData = z.infer<typeof signInSchema>;
+import { twMerge } from 'tailwind-merge';
+import { useSearchParams } from 'next/navigation';
 
 export function SignUpCard() {
+  const mutation = useSignUp();
+
   const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isConfirmPasswordTouched, setIsConfirmPasswordTouched] =
+    useState(false);
+
+  const params = useSearchParams();
+  const error = params.get('error');
 
   const onProviderSignUp = async (provider: 'github' | 'google') => {
     signIn(provider, {
@@ -38,8 +43,27 @@ export function SignUpCard() {
     });
   };
 
-  const onSubmit = async (data: SignInData) => {
-    // Simulate API call
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    mutation.mutate(
+      {
+        name: name,
+        email: email,
+        password: password,
+      },
+      {
+        onSuccess: () => {
+          setIsLoading(false);
+          signIn('credentials', {
+            email: email,
+            password: password,
+            callbackUrl: '/',
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -57,6 +81,12 @@ export function SignUpCard() {
               Sign up to continue
             </CardDescription>
           </CardHeader>
+          {!!mutation.error && (
+            <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
+              <TriangleAlert className="size-4" />
+              <p>Invalid email or password</p>
+            </div>
+          )}
           <CardContent className="space-y-6">
             <div className="space-y-4">
               <Button
@@ -90,20 +120,61 @@ export function SignUpCard() {
               </div>
             </div>
 
-            <form onSubmit={() => {}} className="space-y-4">
+            <form onSubmit={onSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Name</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Your name"
+                  disabled={isLoading}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="name@example.com" />
+                <Input
+                  id="email"
+                  type="email"
+                  disabled={isLoading}
+                  placeholder="name@example.com"
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" />
+                <Input
+                  id="password"
+                  type="password"
+                  disabled={isLoading}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="password">Confirm Password</Label>
-                <Input id="confirm-password" type="password" />
+                <Input
+                  id="confirm-password"
+                  type="password"
+                  disabled={isLoading}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                  }}
+                  onFocus={() => setIsConfirmPasswordTouched(true)}
+                  className={twMerge(
+                    isConfirmPasswordTouched &&
+                      confirmPassword !== password &&
+                      'border-red-500'
+                  )}
+                  placeholder="Confirm Password"
+                  required
+                />
               </div>
 
               <Button

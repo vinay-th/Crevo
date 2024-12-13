@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
 import images from './images';
+import users from './users';
 import { cors } from 'hono/cors';
 
 // bhai revert krlena agar edge pr chalana ho kyuki drizzle chalana haina
@@ -15,7 +16,7 @@ app.use(
   })
 );
 
-const routes = app.route('/images', images);
+const routes = app.route('/images', images).route('/users', users);
 
 export const GET = handle(app);
 export const POST = handle(app);
