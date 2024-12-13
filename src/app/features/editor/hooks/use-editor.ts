@@ -30,6 +30,7 @@ import {
 import { useClipboard } from './use-clipboard';
 import { useHistory } from './use-history';
 import { useHotkeys } from './use-hotkeys';
+import { useWindowEvents } from './use-window-events';
 
 const buildEditor = ({
   autoZoom,
@@ -656,6 +657,8 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
   const [strokeWidth, setStrokeWidth] = useState(STROKE_WIDTH);
   const [strokeDashArray, setStrokeDashArray] =
     useState<number[]>(STROKE_DASH_ARRAY);
+
+  useWindowEvents();
 
   const { save, undo, redo, canUndo, canRedo, canvasHistory, setHistoryIndex } =
     useHistory({
