@@ -21,7 +21,6 @@ import { FaGithub } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { signIn } from 'next-auth/react';
 import { twMerge } from 'tailwind-merge';
-import { useSearchParams } from 'next/navigation';
 
 export function SignUpCard() {
   const mutation = useSignUp();
@@ -33,9 +32,6 @@ export function SignUpCard() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isConfirmPasswordTouched, setIsConfirmPasswordTouched] =
     useState(false);
-
-  const params = useSearchParams();
-  const error = params.get('error');
 
   const onProviderSignUp = async (provider: 'github' | 'google') => {
     signIn(provider, {
@@ -84,7 +80,7 @@ export function SignUpCard() {
           {!!mutation.error && (
             <div className="bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive mb-6">
               <TriangleAlert className="size-4" />
-              <p>Invalid email or password</p>
+              <p>Something went wrong</p>
             </div>
           )}
           <CardContent className="space-y-6">
