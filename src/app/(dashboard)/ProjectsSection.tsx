@@ -21,11 +21,17 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@/components/ui/button';
+import { useDuplicateProject } from '../features/projects/api/use-duplicate-project';
 
 export default function ProjectsSection() {
+  const duplicateMutation = useDuplicateProject();
   const router = useRouter();
   const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useGetProjects();
+
+  const onCopy = (id: string) => {
+    duplicateMutation.mutate({ id });
+  };
 
   if (status === 'error') {
     return (
@@ -111,7 +117,9 @@ export default function ProjectsSection() {
                         <DropdownMenuItem
                           className="h-10 cursor-pointer"
                           disabled={false}
-                          onClick={() => {}}
+                          onClick={() => {
+                            onCopy(project.id);
+                          }}
                         >
                           <CopyIcon className="size-4 mr-2" />
                           <p>Make a Copy</p>
