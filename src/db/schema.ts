@@ -85,3 +85,20 @@ export const authenticators = pgTable(
     }),
   })
 );
+
+export const projects = pgTable('project', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text('name').notNull(),
+  userId: text('userId')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  json: text('json').notNull(),
+  height: integer('height').notNull(),
+  width: integer('width').notNull(),
+  thumbnailUrl: text('thumbnailUrl'),
+  isTemplate: boolean('isTemplate').notNull(),
+  isPro: boolean('isPro').notNull(),
+  createdAt: timestamp('createdAt', { mode: 'date' }).notNull(),
+});
