@@ -74,7 +74,7 @@ export default function ProjectsSection() {
     );
   }
 
-  if (!data.pages.length) {
+  if (!data.pages.length || !data.pages[0].data.length) {
     return (
       <div className="space-y-4">
         <p className="text-lg font-semibold">Recent Projects</p>

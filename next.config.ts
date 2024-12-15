@@ -10,6 +10,12 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'utfs.io',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'crevo.vinaythakor-5025.workers.dev',
         port: '',
         pathname: '/**',
