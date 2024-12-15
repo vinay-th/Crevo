@@ -10,6 +10,7 @@ import Footer from './Footer';
 import { ActiveTool, selectionDependentTools } from '../types';
 import ShapeSidebar from './ShapeSidebar';
 import FillColorSidebar from './FillColorSidebar';
+import TemplateSidebar from './TemplateSidebar';
 import StrokeColorSidebar from './StrokeColorSidebar';
 import StrokeWidthSidebar from './StrokeWidthSidebar';
 import OpacitySidebar from './OpacitySidebar';
@@ -187,6 +188,11 @@ const Editor = ({ initialData }: EditorProps) => {
           onChangeActiveTool={onChangeActiveTool}
         />
         <SettingsSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <TemplateSidebar
           editor={editor}
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
