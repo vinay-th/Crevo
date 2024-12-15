@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useEditor } from '@/app/features/editor/hooks/use-editor';
 import { fabric } from 'fabric';
+import debounce from 'lodash/debounce';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
@@ -30,11 +31,11 @@ interface EditorProps {
 const Editor = ({ initialData }: EditorProps) => {
   const { mutate } = useUpdateProjects(initialData.id);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSave = useCallback(
-    (values: { json: string; width: number; height: number }) => {
-      // TODO: add debounce
+    debounce((values: { json: string; height: number; width: number }) => {
       mutate(values);
-    },
+    }, 1500),
     [mutate]
   );
 
@@ -115,6 +116,7 @@ const Editor = ({ initialData }: EditorProps) => {
   return (
     <div className="h-full flex flex-col">
       <Navbar
+        id={initialData.id}
         editor={editor}
         activeTool={activeTool}
         onChangeActiveTool={onChangeActiveTool}
