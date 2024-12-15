@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm';
 import {
   boolean,
   timestamp,
@@ -18,6 +19,10 @@ export const users = pgTable('user', {
   image: text('image'),
   password: text('password'),
 });
+
+export const usersRelation = relations(users, ({ many }) => ({
+  projects: many(projects),
+}));
 
 export const accounts = pgTable(
   'account',
@@ -102,3 +107,10 @@ export const projects = pgTable('project', {
   isPro: boolean('isPro').notNull(),
   createdAt: timestamp('createdAt', { mode: 'date' }).notNull(),
 });
+
+export const projectsRelation = relations(projects, ({ one }) => ({
+  user: one(users, {
+    fields: [projects.userId],
+    references: [users.id],
+  }),
+}));
