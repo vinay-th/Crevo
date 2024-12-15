@@ -1,5 +1,5 @@
 'use client';
-import { useGetProject } from '@/app/features/projects/api/use-get-projects';
+import { useGetProject } from '@/app/features/projects/api/use-get-project';
 import Editor from '@/app/features/editor/components/editor';
 import { Loader, TriangleAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';

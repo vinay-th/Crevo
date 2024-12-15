@@ -21,7 +21,7 @@ import AiSidebar from './AiSidebar';
 import AiBgRemoveSidebar from './AiBgRemoveSidebar';
 import DrawSidebar from './DrawSidebar';
 import SettingsSidebar from './SettingsSidebar';
-import { ResponseType } from '../../projects/api/use-get-projects';
+import { ResponseType } from '../../projects/api/use-get-project';
 import { useUpdateProjects } from '../../projects/api/use-update-projects';
 
 interface EditorProps {
