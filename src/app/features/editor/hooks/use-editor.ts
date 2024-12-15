@@ -644,7 +644,10 @@ const buildEditor = ({
   };
 };
 
-export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
+export const useEditor = ({
+  clearSelectionCallback,
+  saveCallback,
+}: EditorHookProps) => {
   const [canvas, setCanvas] = useState<null | fabric.Canvas>(null);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
@@ -663,6 +666,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
   const { save, undo, redo, canUndo, canRedo, canvasHistory, setHistoryIndex } =
     useHistory({
       canvas,
+      saveCallback,
     });
 
   const { copy, paste } = useClipboard({ canvas });

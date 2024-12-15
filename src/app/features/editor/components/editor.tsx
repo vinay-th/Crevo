@@ -20,8 +20,24 @@ import AiSidebar from './AiSidebar';
 import AiBgRemoveSidebar from './AiBgRemoveSidebar';
 import DrawSidebar from './DrawSidebar';
 import SettingsSidebar from './SettingsSidebar';
+import { ResponseType } from '../../projects/api/use-get-projects';
+import { useUpdateProjects } from '../../projects/api/use-update-projects';
 
-const Editor = () => {
+interface EditorProps {
+  initialData: ResponseType['data'];
+}
+
+const Editor = ({ initialData }: EditorProps) => {
+  const { mutate } = useUpdateProjects(initialData.id);
+
+  const debouncedSave = useCallback(
+    (values: { json: string; width: number; height: number }) => {
+      console.log('...saving', values);
+      mutate(values);
+    },
+    [mutate]
+  );
+
   const [activeTool, setActiveTool] = useState<ActiveTool>('select');
   const [isClient, setIsClient] = useState(false);
 
@@ -33,6 +49,7 @@ const Editor = () => {
 
   const { inti, editor } = useEditor({
     clearSelectionCallback: onClearSelection,
+    saveCallback: debouncedSave,
   });
 
   const onChangeActiveTool = useCallback(

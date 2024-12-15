@@ -180,6 +180,11 @@ export const TEXT_OPT = {
 
 export interface EditorHookProps {
   clearSelectionCallback?: () => void;
+  saveCallback?: (values: {
+    json: string;
+    width: number;
+    height: number;
+  }) => void;
 }
 
 export type BuildEditorProps = {

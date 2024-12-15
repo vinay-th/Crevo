@@ -4,15 +4,13 @@ import Editor from '@/app/features/editor/components/editor';
 import { Loader, TriangleAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { use } from 'react';
 
-interface EditorPageProps {
-  params: {
-    project: string;
-  };
-}
+const EditorPage = ({ params }: { params: Promise<{ project: string }> }) => {
+  const resolvedParams = use(params);
+  const { project } = resolvedParams;
 
-const EditorPage = ({ params }: EditorPageProps) => {
-  const { data, isLoading, isError } = useGetProject(params.project);
+  const { data, isLoading, isError } = useGetProject(project);
   if (isLoading || !data) {
     return (
       <div className="flex h-full flex-col items-center justify-center">
@@ -31,7 +29,7 @@ const EditorPage = ({ params }: EditorPageProps) => {
       </div>
     );
   }
-  return <Editor />;
+  return <Editor initialData={data} />;
 };
 
 export default EditorPage;
