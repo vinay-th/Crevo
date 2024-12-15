@@ -1,6 +1,17 @@
 import { fabric } from 'fabric';
 import * as material from 'material-colors';
 
+export const JSON_KEYS = [
+  'name',
+  'gradientAngle',
+  'selectable',
+  'hasControls',
+  'linkData',
+  'editable',
+  'extensionType',
+  'extension',
+];
+
 export const selectionDependentTools = [
   'fill',
   'font',
@@ -172,7 +183,15 @@ export interface EditorHookProps {
 }
 
 export type BuildEditorProps = {
+  autoZoom: () => void;
   canvas: fabric.Canvas | null;
+  copy: () => void;
+  paste: () => void;
+  save: (skip?: boolean) => void;
+  undo: () => void;
+  redo: () => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
   fillColor: string;
   setFillColor: (value: string) => void;
   strokeColor: string;
@@ -187,8 +206,34 @@ export type BuildEditorProps = {
 };
 
 export interface Editor {
+  saveJson: () => void;
+  loadJson: (json: string) => void;
+  savePng: () => void;
+  saveSvg: () => void;
+  saveJpg: () => void;
+
+  getWorkspace: () => fabric.Rect | null;
+  autoZoom: () => void;
+
+  zoomIn: () => void;
+  zoomOut: () => void;
+
   delete: () => void;
   addImage: (url: string) => void;
+
+  enableDrawingMode: () => void;
+  disableDrawingMode: () => void;
+
+  changeSize: (size: { width: number; height: number }) => void;
+  changeBackground: (value: string) => void;
+
+  onCopy: () => void;
+  onPaste: () => void;
+
+  onUndo: () => void;
+  onRedo: () => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
 
   bringForward: () => void;
   sendBackward: () => void;

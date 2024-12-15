@@ -18,18 +18,12 @@ import { ImageSidebar } from './ImageSidebar';
 import FilterSidebar from './FilterSidebar';
 import AiSidebar from './AiSidebar';
 import AiBgRemoveSidebar from './AiBgRemoveSidebar';
+import DrawSidebar from './DrawSidebar';
+import SettingsSidebar from './SettingsSidebar';
 
 const Editor = () => {
   const [activeTool, setActiveTool] = useState<ActiveTool>('select');
   const [isClient, setIsClient] = useState(false);
-
-  const onChangeActiveTool = useCallback(
-    (tool: ActiveTool) => {
-      if (tool === activeTool) return setActiveTool('select');
-      setActiveTool(tool);
-    },
-    [activeTool]
-  );
 
   const onClearSelection = useCallback(() => {
     if (selectionDependentTools.includes(activeTool)) {
@@ -40,6 +34,22 @@ const Editor = () => {
   const { inti, editor } = useEditor({
     clearSelectionCallback: onClearSelection,
   });
+
+  const onChangeActiveTool = useCallback(
+    (tool: ActiveTool) => {
+      if (tool === 'draw') {
+        editor?.enableDrawingMode();
+      }
+
+      if (activeTool === 'draw') {
+        editor?.disableDrawingMode();
+      }
+      if (tool === activeTool) return setActiveTool('select');
+
+      setActiveTool(tool);
+    },
+    [activeTool, editor]
+  );
 
   const canvasRef = useRef(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -84,7 +94,11 @@ const Editor = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <Navbar activeTool={activeTool} onChangeActiveTool={onChangeActiveTool} />
+      <Navbar
+        editor={editor}
+        activeTool={activeTool}
+        onChangeActiveTool={onChangeActiveTool}
+      />
       <div className="absolute h-[calc(100vh-68px)] w-full top-[64px] flex">
         <Sidebar
           activeTool={activeTool}
@@ -145,6 +159,16 @@ const Editor = () => {
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
         />
+        <DrawSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <SettingsSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
         <main className="bg-muted flex-1 overflow-auto relative flex flex-col">
           <Toolbar
             editor={editor}
@@ -158,7 +182,7 @@ const Editor = () => {
           >
             <canvas className="my-canvas" ref={canvasRef} />
           </div>
-          <Footer />
+          <Footer editor={editor} />
         </main>
       </div>
     </div>

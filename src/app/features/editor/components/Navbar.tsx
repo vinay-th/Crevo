@@ -27,13 +27,30 @@ import {
 } from 'react-icons/bs';
 import { ActiveTool } from '../types';
 import { cn } from '@/lib/utils';
+import { Editor } from '../types';
+import { useFilePicker } from 'use-file-picker';
+import { UserButton } from '../../auth/components/UserButton';
 
 interface NavbarProps {
   activeTool: ActiveTool;
+  editor?: Editor | undefined;
   onChangeActiveTool: (tool: ActiveTool) => void;
 }
 
-const Navbar = ({ activeTool, onChangeActiveTool }: NavbarProps) => {
+const Navbar = ({ activeTool, onChangeActiveTool, editor }: NavbarProps) => {
+  const { openFilePicker } = useFilePicker({
+    accept: '.json',
+    onFilesSuccessfullySelected: ({ plainFiles }: any) => {
+      if (plainFiles && plainFiles.length > 0) {
+        const file = plainFiles[0];
+        const reader = new FileReader();
+        reader.readAsText(file, 'UTF-8');
+        reader.onload = () => {
+          editor?.loadJson(reader.result as string);
+        };
+      }
+    },
+  });
   return (
     <nav className="w-full flex items-center p-4 h-[64px] gap-x-8 border-b lg:pl-[34px]">
       <Logo />
@@ -47,7 +64,7 @@ const Navbar = ({ activeTool, onChangeActiveTool }: NavbarProps) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="min-w-60">
             <DropdownMenuItem
-              onClick={() => {}}
+              onClick={() => openFilePicker()}
               className="flex flex-row items-center gap-x-2"
             >
               <CiFileOn style={{ width: '1.5rem', height: '1.5rem' }} />
@@ -72,12 +89,22 @@ const Navbar = ({ activeTool, onChangeActiveTool }: NavbarProps) => {
           </Button>
         </Hint>
         <Hint label="Undo" side="bottom" sideOffset={10}>
-          <Button variant="ghost" size="icon" onClick={() => {}} className="">
+          <Button
+            disabled={!editor?.canUndo()}
+            variant="ghost"
+            size="icon"
+            onClick={() => editor?.onUndo()}
+          >
             <Undo2 className="size-4" />
           </Button>
         </Hint>
         <Hint label="Redo" side="bottom" sideOffset={10}>
-          <Button variant="ghost" size="icon" onClick={() => {}} className="">
+          <Button
+            disabled={!editor?.canRedo()}
+            variant="ghost"
+            size="icon"
+            onClick={() => editor?.onRedo()}
+          >
             <Redo2 className="size-4" />
           </Button>
         </Hint>
@@ -100,7 +127,9 @@ const Navbar = ({ activeTool, onChangeActiveTool }: NavbarProps) => {
             <DropdownMenuContent align="end" className="min-w-60">
               <DropdownMenuItem
                 className="flex items-center gap-x-2"
-                onClick={() => {}}
+                onClick={() => {
+                  editor?.saveJson();
+                }}
               >
                 <BsFiletypeJson style={{ width: '1.5rem', height: '1.5rem' }} />
                 <div>
@@ -112,7 +141,9 @@ const Navbar = ({ activeTool, onChangeActiveTool }: NavbarProps) => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="flex items-center gap-x-2"
-                onClick={() => {}}
+                onClick={() => {
+                  editor?.savePng();
+                }}
               >
                 <BsFiletypePng style={{ width: '1.5rem', height: '1.5rem' }} />
                 <div>
@@ -124,7 +155,9 @@ const Navbar = ({ activeTool, onChangeActiveTool }: NavbarProps) => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="flex items-center gap-x-2"
-                onClick={() => {}}
+                onClick={() => {
+                  editor?.saveJpg();
+                }}
               >
                 <BsFiletypeJpg style={{ width: '1.5rem', height: '1.5rem' }} />
                 <div>
@@ -136,7 +169,9 @@ const Navbar = ({ activeTool, onChangeActiveTool }: NavbarProps) => {
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="flex items-center gap-x-2"
-                onClick={() => {}}
+                onClick={() => {
+                  editor?.saveSvg();
+                }}
               >
                 <BsFiletypeSvg style={{ width: '1.5rem', height: '1.5rem' }} />
                 <div>
@@ -148,7 +183,7 @@ const Navbar = ({ activeTool, onChangeActiveTool }: NavbarProps) => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* ToDO Add User Btn */}
+          <UserButton />
         </div>
       </div>
     </nav>

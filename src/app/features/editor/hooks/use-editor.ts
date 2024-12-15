@@ -16,14 +16,32 @@ import {
   OPACITY,
   TEXT_OPT,
   FONT_FAMILY,
+  JSON_KEYS,
 } from '../types';
 
 import { useAutoResize } from './use-auto-resize';
 import { useCanvasEvents } from './use-canvas-events';
-import { createFilter, isTextType } from '../utils';
+import {
+  createFilter,
+  downloadFile,
+  isTextType,
+  transformText,
+} from '../utils';
+import { useClipboard } from './use-clipboard';
+import { useHistory } from './use-history';
+import { useHotkeys } from './use-hotkeys';
+import { useWindowEvents } from './use-window-events';
 
 const buildEditor = ({
+  autoZoom,
   canvas,
+  save,
+  undo,
+  redo,
+  canUndo,
+  canRedo,
+  copy,
+  paste,
   setFillColor,
   setStrokeColor,
   setStrokeWidth,
@@ -36,6 +54,68 @@ const buildEditor = ({
   strokeDashArray,
   selectedObjects,
 }: BuildEditorProps): Editor => {
+  const generateSaveOptions = () => {
+    const { width, height, left, top } = getWorkspace() as fabric.Rect;
+
+    return {
+      name: 'Image',
+      format: 'png',
+      quality: 1,
+      width,
+      height,
+      left,
+      top,
+    };
+  };
+
+  const savePng = () => {
+    const options = generateSaveOptions();
+
+    canvas?.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    if (canvas) {
+      const dataUrl = canvas.toDataURL(options);
+      downloadFile(dataUrl, 'png');
+    }
+  };
+
+  const saveSvg = () => {
+    const options = generateSaveOptions();
+
+    canvas?.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    if (canvas) {
+      const dataUrl = canvas.toDataURL(options);
+      downloadFile(dataUrl, 'svg');
+    }
+  };
+
+  const saveJpg = () => {
+    const options = generateSaveOptions();
+
+    canvas?.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    if (canvas) {
+      const dataUrl = canvas.toDataURL(options);
+      downloadFile(dataUrl, 'jpg');
+    }
+  };
+
+  const saveJson = async () => {
+    const dataUrl = canvas?.toJSON(JSON_KEYS);
+    await transformText(dataUrl?.objects);
+
+    const fileStrings = `data:text/json;charset=utf-8,${encodeURIComponent(
+      JSON.stringify(dataUrl, null, '\t')
+    )}`;
+
+    downloadFile(fileStrings, 'json');
+  };
+
+  const loadJson = (json: string) => {
+    const data = JSON.parse(json);
+    canvas?.loadFromJSON(data, () => {
+      autoZoom();
+    });
+  };
+
   const getWorkspace = () => {
     return (
       canvas?.getObjects().find((object) => object.name === 'clip') || null
@@ -59,6 +139,77 @@ const buildEditor = ({
   };
 
   return {
+    saveJson,
+    loadJson,
+    savePng,
+    saveSvg,
+    saveJpg,
+
+    getWorkspace,
+    autoZoom,
+
+    canUndo,
+    canRedo,
+
+    zoomIn: () => {
+      if (canvas) {
+        let zoomRatio = canvas?.getZoom();
+        zoomRatio += 0.05;
+        const center = canvas?.getCenter();
+        canvas?.zoomToPoint(
+          new fabric.Point(center.left, center.top),
+          zoomRatio
+        );
+      }
+    },
+    zoomOut: () => {
+      if (canvas) {
+        let zoomRatio = canvas?.getZoom();
+        zoomRatio -= 0.05;
+        const center = canvas?.getCenter();
+        canvas?.zoomToPoint(
+          new fabric.Point(center.left, center.top),
+          zoomRatio < 0.2 ? 0.2 : zoomRatio
+        );
+      }
+    },
+
+    changeSize: (size: { width: number; height: number }) => {
+      const workspace = getWorkspace();
+      workspace?.set(size);
+      autoZoom();
+      save();
+    },
+
+    changeBackground: (value: string) => {
+      const workspace = getWorkspace();
+      workspace?.set({ fill: value });
+      canvas?.renderAll();
+      save();
+    },
+
+    enableDrawingMode: () => {
+      canvas?.discardActiveObject();
+      canvas?.renderAll();
+      if (canvas) {
+        canvas.isDrawingMode = true;
+        canvas.freeDrawingBrush.width = STROKE_WIDTH;
+        canvas.freeDrawingBrush.color = STROKE_COLOR;
+      }
+    },
+
+    disableDrawingMode: () => {
+      if (canvas) {
+        canvas.isDrawingMode = false;
+      }
+    },
+
+    onCopy: () => copy(),
+    onPaste: () => paste(),
+
+    onUndo: () => undo(),
+    onRedo: () => redo(),
+
     addImage: (url: string) => {
       fabric.Image.fromURL(
         url,
@@ -145,6 +296,9 @@ const buildEditor = ({
         }
         object.set({ stroke: value });
       });
+      if (canvas) {
+        canvas.freeDrawingBrush.color = value;
+      }
       canvas?.renderAll();
     },
     changeStrokeWidth: (value: number) => {
@@ -152,6 +306,9 @@ const buildEditor = ({
       canvas?.getActiveObjects().forEach((object) => {
         object.set({ strokeWidth: value });
       });
+      if (canvas) {
+        canvas.freeDrawingBrush.width = value;
+      }
       canvas?.renderAll();
     },
     changeStrokeDashArray: (value: number[]) => {
@@ -500,24 +657,43 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
   const [strokeWidth, setStrokeWidth] = useState(STROKE_WIDTH);
   const [strokeDashArray, setStrokeDashArray] =
     useState<number[]>(STROKE_DASH_ARRAY);
-  // const [fontSize, setFontSize] = useState(16);
 
-  useAutoResize({
+  useWindowEvents();
+
+  const { save, undo, redo, canUndo, canRedo, canvasHistory, setHistoryIndex } =
+    useHistory({
+      canvas,
+    });
+
+  const { copy, paste } = useClipboard({ canvas });
+
+  const { autoZoom } = useAutoResize({
     canvas,
     container,
   });
 
   useCanvasEvents({
+    save,
     canvas,
     container,
     setSelectedObjects,
     clearSelectionCallback,
   });
 
+  useHotkeys({ canvas, undo, redo, save, copy, paste });
+
   const editor = useMemo(() => {
     if (canvas) {
       return buildEditor({
+        autoZoom,
         canvas,
+        save,
+        undo,
+        redo,
+        canUndo,
+        canRedo,
+        copy,
+        paste,
         setFillColor,
         setStrokeColor,
         setStrokeWidth,
@@ -532,7 +708,15 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
       });
     }
   }, [
+    autoZoom,
     canvas,
+    save,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    copy,
+    paste,
     setFillColor,
     setStrokeColor,
     setStrokeWidth,
@@ -601,8 +785,12 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
 
       setCanvas(initialCanvas);
       setContainer(initialContainer);
+
+      const currentState = JSON.stringify(initialCanvas.toJSON(JSON_KEYS));
+      canvasHistory.current = [currentState];
+      setHistoryIndex(0);
     },
-    []
+    [canvasHistory, setHistoryIndex]
   );
 
   return { inti, editor };
