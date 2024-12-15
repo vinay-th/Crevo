@@ -22,9 +22,16 @@ import { useRouter } from 'next/navigation';
 import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { useDuplicateProject } from '../features/projects/api/use-duplicate-project';
+import { useDeleteProject } from '../features/projects/api/use-delete-project';
+import { useConfirm } from '@/hooks/use-confirm';
 
 export default function ProjectsSection() {
+  const [ConfirmDialog, confirm] = useConfirm(
+    'Are you sure?',
+    'You are about to delete this project.'
+  );
   const duplicateMutation = useDuplicateProject();
+  const removeMutation = useDeleteProject();
   const router = useRouter();
   const { data, status, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useGetProjects();
@@ -33,9 +40,18 @@ export default function ProjectsSection() {
     duplicateMutation.mutate({ id });
   };
 
+  const onDelete = async (id: string) => {
+    const ok = await confirm();
+
+    if (ok) {
+      removeMutation.mutate({ id });
+    }
+  };
+
   if (status === 'error') {
     return (
       <div className="space-y-4">
+        <ConfirmDialog />
         <p className="text-lg font-semibold">Recent Projects</p>
         <div className="flex h-32 flex-col items-center justify-center">
           <AlertTriangle className="size-6 text-muted-foreground" />
@@ -74,6 +90,7 @@ export default function ProjectsSection() {
 
   return (
     <div className="space-y-4">
+      <ConfirmDialog />
       <p className="text-lg font-semibold">Recent Projects</p>
       <Table>
         <TableBody>
@@ -127,7 +144,9 @@ export default function ProjectsSection() {
                         <DropdownMenuItem
                           className="h-10 cursor-pointer"
                           disabled={false}
-                          onClick={() => {}}
+                          onClick={() => {
+                            onDelete(project.id);
+                          }}
                         >
                           <Trash className="size-4 mr-2" />
                           <p>Delete</p>
