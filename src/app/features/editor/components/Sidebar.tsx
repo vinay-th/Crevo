@@ -75,7 +75,7 @@ export default function Sidebar({
         />
         <SidebarItem
           icon={Settings}
-          label="Settings"
+          label="Canvas Settings"
           isActive={activeTool === 'settings'}
           onClick={() => {
             onChangeActiveTool('settings');

@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useEditor } from '@/app/features/editor/hooks/use-editor';
 import { fabric } from 'fabric';
+import debounce from 'lodash/debounce';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import Toolbar from './Toolbar';
@@ -9,6 +10,7 @@ import Footer from './Footer';
 import { ActiveTool, selectionDependentTools } from '../types';
 import ShapeSidebar from './ShapeSidebar';
 import FillColorSidebar from './FillColorSidebar';
+import TemplateSidebar from './TemplateSidebar';
 import StrokeColorSidebar from './StrokeColorSidebar';
 import StrokeWidthSidebar from './StrokeWidthSidebar';
 import OpacitySidebar from './OpacitySidebar';
@@ -20,8 +22,24 @@ import AiSidebar from './AiSidebar';
 import AiBgRemoveSidebar from './AiBgRemoveSidebar';
 import DrawSidebar from './DrawSidebar';
 import SettingsSidebar from './SettingsSidebar';
+import { ResponseType } from '../../projects/api/use-get-project';
+import { useUpdateProjects } from '../../projects/api/use-update-projects';
 
-const Editor = () => {
+interface EditorProps {
+  initialData: ResponseType['data'];
+}
+
+const Editor = ({ initialData }: EditorProps) => {
+  const { mutate } = useUpdateProjects(initialData.id);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedSave = useCallback(
+    debounce((values: { json: string; height: number; width: number }) => {
+      mutate(values);
+    }, 1500),
+    [mutate]
+  );
+
   const [activeTool, setActiveTool] = useState<ActiveTool>('select');
   const [isClient, setIsClient] = useState(false);
 
@@ -32,7 +50,11 @@ const Editor = () => {
   }, [activeTool]);
 
   const { inti, editor } = useEditor({
+    defaultState: initialData.json,
+    defaultWidth: initialData.width,
+    defaultHeight: initialData.height,
     clearSelectionCallback: onClearSelection,
+    saveCallback: debouncedSave,
   });
 
   const onChangeActiveTool = useCallback(
@@ -95,6 +117,7 @@ const Editor = () => {
   return (
     <div className="h-full flex flex-col">
       <Navbar
+        id={initialData.id}
         editor={editor}
         activeTool={activeTool}
         onChangeActiveTool={onChangeActiveTool}
@@ -165,6 +188,11 @@ const Editor = () => {
           onChangeActiveTool={onChangeActiveTool}
         />
         <SettingsSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <TemplateSidebar
           editor={editor}
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}

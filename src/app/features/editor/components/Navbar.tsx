@@ -11,6 +11,7 @@ import {
 import {
   ChevronDown,
   Download,
+  Loader,
   MousePointerClick,
   Redo2,
   Undo2,
@@ -20,6 +21,7 @@ import { Separator } from '@/components/ui/separator';
 import { Hint } from '@/components/crevo/Hint';
 import {
   BsCloudCheck,
+  BsCloudSlash,
   BsFiletypeJpg,
   BsFiletypeJson,
   BsFiletypePng,
@@ -30,14 +32,33 @@ import { cn } from '@/lib/utils';
 import { Editor } from '../types';
 import { useFilePicker } from 'use-file-picker';
 import { UserButton } from '../../auth/components/UserButton';
+import { useMutationState } from '@tanstack/react-query';
 
 interface NavbarProps {
+  id: string;
   activeTool: ActiveTool;
   editor?: Editor | undefined;
   onChangeActiveTool: (tool: ActiveTool) => void;
 }
 
-const Navbar = ({ activeTool, onChangeActiveTool, editor }: NavbarProps) => {
+const Navbar = ({
+  id,
+  activeTool,
+  onChangeActiveTool,
+  editor,
+}: NavbarProps) => {
+  const data = useMutationState({
+    filters: {
+      mutationKey: ['project', { id: id }],
+      exact: true,
+    },
+    select: (mutation) => mutation.state.status,
+  });
+  const currentSate = data[data.length - 1];
+
+  const isError = currentSate === 'error';
+  const isPending = currentSate === 'pending';
+
   const { openFilePicker } = useFilePicker({
     accept: '.json',
     onFilesSuccessfullySelected: ({ plainFiles }: any) => {
@@ -109,10 +130,24 @@ const Navbar = ({ activeTool, onChangeActiveTool, editor }: NavbarProps) => {
           </Button>
         </Hint>
         <Separator orientation="vertical" className="mx-2" />
-        <div className="flex items-center gap-x-2">
-          <BsCloudCheck className="size-[20px] text-muted-foreground" />
-          <p className="text-xs text-muted-foreground">Saved</p>
-        </div>
+        {!isPending && !isError && (
+          <div className="flex items-center gap-x-2">
+            <BsCloudCheck className="size-[20px] text-muted-foreground" />
+            <p className="text-xs text-muted-foreground">Saved</p>
+          </div>
+        )}
+        {!isPending && isError && (
+          <div className="flex items-center gap-x-2">
+            <BsCloudSlash className="size-[20px] text-muted-foreground" />
+            <p className="text-xs text-muted-foreground">Failed to save</p>
+          </div>
+        )}
+        {isPending && (
+          <div className="flex items-center gap-x-2">
+            <Loader className="size-4 animate-spin text-muted-foreground" />
+            <p className="text-xs text-muted-foreground">Saving...</p>
+          </div>
+        )}
         <div
           className="ml-auto flex items-center gap-x-4"
           style={{ marginLeft: 'auto' }}

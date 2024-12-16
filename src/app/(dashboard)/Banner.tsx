@@ -1,7 +1,27 @@
+'use client';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import { useCreateProjects } from '../features/projects/api/use-create-projects';
+import { useRouter } from 'next/navigation';
 
 export const Banner = () => {
+  const router = useRouter();
+  const mutation = useCreateProjects();
+  const onClick = () => {
+    mutation.mutate(
+      {
+        name: 'Untitled',
+        json: '',
+        height: 1200,
+        width: 900,
+      },
+      {
+        onSuccess: ({ data }: any) => {
+          router.push(`/editor/${data.id}`);
+        },
+      }
+    );
+  };
   return (
     <div className="aspect-[5/1] min-h-[248px] flex gap-x-6 p-6 items-center rounded-xl bg-gradient-to-r from-[#030038] via-[#090979] to-[#9e00ff]">
       <div className="rounded-full size-28 md:flex items-center justify-center bg-white/50 hidden">
@@ -18,7 +38,11 @@ export const Banner = () => {
           design system. Experience the power of Crevo and unlock your creative
           potential with AI.
         </p>
-        <Button variant={'secondary'} className="w-[160px] mt-2">
+        <Button
+          variant={'secondary'}
+          className="w-[160px] mt-2"
+          onClick={onClick}
+        >
           Start Creating
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>

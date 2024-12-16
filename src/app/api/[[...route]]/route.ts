@@ -3,6 +3,7 @@ import { handle } from 'hono/vercel';
 import images from './images';
 import users from './users';
 import test from './test';
+import projects from './projects';
 import { cors } from 'hono/cors';
 import { AuthConfig, initAuthConfig } from '@hono/auth-js';
 import authConfig from '@/auth.config';
@@ -34,9 +35,12 @@ app.use(
 const routes = app
   .route('/images', images)
   .route('/users', users)
-  .route('/test', test);
+  .route('/test', test)
+  .route('/projects', projects);
 
 export const GET = handle(app);
 export const POST = handle(app);
+export const DELETE = handle(app);
+export const PATCH = handle(app);
 
 export type AppType = typeof routes;

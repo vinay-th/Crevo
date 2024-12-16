@@ -1,12 +1,18 @@
 import { fabric } from 'fabric';
 import { useCallback, useRef, useState } from 'react';
 import { JSON_KEYS } from '../types';
+import { object } from 'zod';
 
 interface useHistoryProps {
   canvas: fabric.Canvas | null;
+  saveCallback?: (values: {
+    json: string;
+    width: number;
+    height: number;
+  }) => void;
 }
 
-export const useHistory = ({ canvas }: useHistoryProps) => {
+export const useHistory = ({ canvas, saveCallback }: useHistoryProps) => {
   const [historyIndex, setHistoryIndex] = useState(0);
   const canvasHistory = useRef<string[]>([]);
   const skipSave = useRef(false);
@@ -32,10 +38,20 @@ export const useHistory = ({ canvas }: useHistoryProps) => {
         setHistoryIndex(canvasHistory.current.length - 1);
       }
 
-      // ToDo Save callback
-      // Save to DB
+      const workspace = canvas
+        .getObjects()
+        .find((object) => object.name === 'clip');
+
+      const width = workspace?.get('width') || 0;
+      const height = workspace?.get('height') || 0;
+
+      saveCallback?.({
+        json,
+        width,
+        height,
+      });
     },
-    [canvas]
+    [canvas, saveCallback]
   );
 
   const undo = useCallback(() => {

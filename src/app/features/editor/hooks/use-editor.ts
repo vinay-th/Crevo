@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo, useEffect } from 'react';
+import { useCallback, useState, useMemo, useEffect, useRef } from 'react';
 import { fabric } from 'fabric';
 import {
   BuildEditorProps,
@@ -31,6 +31,7 @@ import { useClipboard } from './use-clipboard';
 import { useHistory } from './use-history';
 import { useHotkeys } from './use-hotkeys';
 import { useWindowEvents } from './use-window-events';
+import { useLoadState } from './use-load-state';
 
 const buildEditor = ({
   autoZoom,
@@ -644,7 +645,17 @@ const buildEditor = ({
   };
 };
 
-export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
+export const useEditor = ({
+  defaultState,
+  defaultWidth,
+  defaultHeight,
+  clearSelectionCallback,
+  saveCallback,
+}: EditorHookProps) => {
+  const initialState = useRef(defaultState);
+  const initialWidth = useRef(defaultWidth);
+  const initialHeight = useRef(defaultHeight);
+
   const [canvas, setCanvas] = useState<null | fabric.Canvas>(null);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
@@ -663,6 +674,7 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
   const { save, undo, redo, canUndo, canRedo, canvasHistory, setHistoryIndex } =
     useHistory({
       canvas,
+      saveCallback,
     });
 
   const { copy, paste } = useClipboard({ canvas });
@@ -681,6 +693,14 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
   });
 
   useHotkeys({ canvas, undo, redo, save, copy, paste });
+
+  useLoadState({
+    canvas,
+    autoZoom,
+    initialState,
+    canvasHistory,
+    setHistoryIndex,
+  });
 
   const editor = useMemo(() => {
     if (canvas) {
@@ -763,13 +783,13 @@ export const useEditor = ({ clearSelectionCallback }: EditorHookProps) => {
       });
 
       const initialWorkspace = new fabric.Rect({
-        width: 900,
-        height: 1200,
+        width: initialWidth.current,
+        height: initialHeight.current,
         name: 'clip',
+        fill: 'white',
         hasControls: false,
         selectable: false,
         hoverCursor: 'default',
-        fill: 'white',
         shadow: new fabric.Shadow({
           color: 'rgba(0, 0, 0, 0.8)',
           blur: 5,
