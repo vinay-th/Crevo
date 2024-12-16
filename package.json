@@ -55,6 +55,7 @@
     "replicate": "^1.0.1",
     "sonner": "^1.7.1",
     "sooner": "^1.1.1",
+    "stripe": "^16.2.0",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "unsplash-js": "^7.0.19",
