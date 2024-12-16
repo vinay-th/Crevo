@@ -5,15 +5,17 @@ import { Separator } from '@/components/ui/separator';
 import { CreditCard, Crown, Home, MessageCircleQuestion } from 'lucide-react';
 import SidebarItem from './SidebarItem';
 import { usePathname } from 'next/navigation';
+import { usePaywall } from '../features/subscription/hooks/use-paywall';
 
 const SidebarRoutes = () => {
+  const { triggerPaywall } = usePaywall();
   const pathname = usePathname();
   return (
     <div className="flex flex-col gap-y-4 flex-1">
       <div className="px-4">
         <Button
           className="w-full rounded-xl border-none hover:opacity-75 transition"
-          onClick={() => {}}
+          onClick={() => triggerPaywall()}
           variant={'outline'}
           size={'lg'}
         >
