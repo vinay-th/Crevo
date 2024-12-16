@@ -8,13 +8,19 @@ import {
 import { TemplateCard } from './TemplateCard';
 import { useCreateProjects } from '../features/projects/api/use-create-projects';
 import { useRouter } from 'next/navigation';
+import { usePaywall } from '../features/subscription/hooks/use-paywall';
 
 const TemplatesSection = () => {
+  const paywall = usePaywall();
   const router = useRouter();
   const mutation = useCreateProjects();
 
   const onClick = (template: ResponseType['data'][0]) => {
-    // TODO: Check if pro
+    if (template.isPro && paywall.shouldBlock) {
+      paywall.triggerPaywall();
+      return;
+    }
+
     mutation.mutate(
       {
         name: `${template.name} project`,
@@ -35,7 +41,7 @@ const TemplatesSection = () => {
   });
   if (isLoading) {
     return (
-      <div>
+      <div className="flex h-32 flex-col items-center justify-center">
         <Loader className="size-6 animate-spin text-muted-foreground" />
       </div>
     );

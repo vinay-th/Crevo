@@ -62,7 +62,8 @@
     "use-file-picker": "^2.1.2",
     "uuidv4": "^6.2.13",
     "zod": "^3.23.8",
-    "zod-validator": "^1.0.1"
+    "zod-validator": "^1.0.1",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

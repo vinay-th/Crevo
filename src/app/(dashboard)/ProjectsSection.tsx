@@ -68,7 +68,7 @@ export default function ProjectsSection() {
       <div className="space-y-4">
         <p className="text-lg font-semibold">Recent Projects</p>
         <div className="flex h-32 flex-col items-center justify-center">
-          <Loader className="size-6 text-muted-foreground" />
+          <Loader className="size-6 animate-spin text-muted-foreground" />
         </div>
       </div>
     );

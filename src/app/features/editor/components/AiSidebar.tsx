@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Sparkles, Plus } from 'lucide-react';
 import { fabric } from 'fabric';
+import { usePaywall } from '../../subscription/hooks/use-paywall';
 
 interface AiSidebarProps {
   editor: Editor | undefined;
@@ -20,6 +21,8 @@ export const AiSidebar = ({
   activeTool,
   onChangeActiveTool,
 }: AiSidebarProps) => {
+  const paywall = usePaywall();
+
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [text, setText] = useState<string>('');
   const [imageData, setImageData] = useState<string | null>(null);
@@ -29,6 +32,10 @@ export const AiSidebar = ({
   };
 
   const handleClick = () => {
+    if (paywall.shouldBlock) {
+      paywall.triggerPaywall();
+      return;
+    }
     setImageSrc(
       `https://crevo.vinaythakor-5025.workers.dev/?prompt=${encodeURIComponent(
         text
