@@ -4,6 +4,7 @@ import { Providers } from '@/components/providers';
 import { SessionProvider } from 'next-auth/react';
 import { auth } from '@/auth';
 import { Modals } from '@/components/crevo/Modals';
+import { SubscriptionAlert } from './features/subscription/components/SubscriptionAlert';
 
 export const metadata: Metadata = {
   title: 'Crevo',
@@ -28,6 +29,7 @@ export default async function RootLayout({
         <body>
           <Providers>
             <Modals />
+            <SubscriptionAlert />
             {children}
           </Providers>
         </body>
