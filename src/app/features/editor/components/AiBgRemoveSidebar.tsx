@@ -5,6 +5,7 @@ import { ToolbarSidebarHeader } from './ToolbarSidebarHeader';
 import { ToolSidebarClose } from '@/components/crevo/ToolsidebarClose';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
+import { usePaywall } from '../../subscription/hooks/use-paywall';
 
 interface AiBgRemoveSidebarProps {
   editor: Editor | undefined;
@@ -17,11 +18,16 @@ export const AiBgRemoveSidebar = ({
   activeTool,
   onChangeActiveTool,
 }: AiBgRemoveSidebarProps) => {
+  const paywall = usePaywall();
   const onClose = () => {
     onChangeActiveTool('select');
   };
 
   const handleClick = async () => {
+    if (paywall.shouldBlock) {
+      paywall.triggerPaywall();
+      return;
+    }
     editor?.removeBg();
   };
 
