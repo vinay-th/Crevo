@@ -11,10 +11,20 @@ import {
 import { CreditCard, Crown, Loader, LogOut } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import { usePaywall } from '../../subscription/hooks/use-paywall';
+import { useBilling } from '../../subscription/api/use-billing';
 
 export const UserButton = () => {
-  const { shouldBlock, isLoading } = usePaywall();
+  const { shouldBlock, isLoading, triggerPaywall } = usePaywall();
   const session = useSession();
+  const mutation = useBilling();
+
+  const onClick = () => {
+    if (shouldBlock) {
+      triggerPaywall();
+      return;
+    }
+    mutation.mutate();
+  };
 
   if (session.status === 'loading') {
     return <Loader className="size-4 animate-spin text-muted-foreground" />;
@@ -45,7 +55,7 @@ export const UserButton = () => {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-60">
-        <DropdownMenuItem disabled={false} onClick={() => {}} className="h-10">
+        <DropdownMenuItem disabled={mutation.isPending} onClick={onClick}>
           <CreditCard className="mr-2 h-4 w-4" />
           Billing
         </DropdownMenuItem>

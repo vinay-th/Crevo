@@ -6,26 +6,42 @@ import { CreditCard, Crown, Home, MessageCircleQuestion } from 'lucide-react';
 import SidebarItem from './SidebarItem';
 import { usePathname } from 'next/navigation';
 import { usePaywall } from '../features/subscription/hooks/use-paywall';
+import { useBilling } from '../features/subscription/api/use-billing';
 
 const SidebarRoutes = () => {
-  const { triggerPaywall } = usePaywall();
+  const mutation = useBilling();
+  const { triggerPaywall, shouldBlock, isLoading } = usePaywall();
   const pathname = usePathname();
+
+  const onClick = () => {
+    if (shouldBlock) {
+      triggerPaywall();
+      return;
+    }
+    mutation.mutate();
+  };
+
   return (
     <div className="flex flex-col gap-y-4 flex-1">
-      <div className="px-4">
-        <Button
-          className="w-full rounded-xl border-none hover:opacity-75 transition"
-          onClick={() => triggerPaywall()}
-          variant={'outline'}
-          size={'lg'}
-        >
-          <Crown className="size-4 mr-2 fill-yellow-500 text-yellow-500" />
-          Upgrade to Crevo Pro
-        </Button>
-      </div>
-      <div className="px-3">
-        <Separator />
-      </div>
+      {shouldBlock && !isLoading && (
+        <>
+          <div className="px-4">
+            <Button
+              className="w-full rounded-xl border-none hover:opacity-75 transition"
+              onClick={() => triggerPaywall()}
+              variant={'outline'}
+              size={'lg'}
+            >
+              <Crown className="size-4 mr-2 fill-yellow-500 text-yellow-500" />
+              Upgrade to Crevo Pro
+            </Button>
+          </div>
+          <div className="px-3">
+            <Separator />
+          </div>
+        </>
+      )}
+
       <ul className="flex flex-col gap-y-1 px-3">
         <SidebarItem
           label="Home"
@@ -42,7 +58,7 @@ const SidebarRoutes = () => {
           label="Billing"
           href="/"
           icon={CreditCard}
-          onClick={() => {}}
+          onClick={() => onClick()}
         />
         <SidebarItem
           label="Support"
