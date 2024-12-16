@@ -29,6 +29,13 @@
       "when": 1734261631822,
       "tag": "0003_wild_annihilus",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1734362009759,
+      "tag": "0004_bitter_kronos",
+      "breakpoints": true
     }
   ]
 }
