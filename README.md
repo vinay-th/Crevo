@@ -8,6 +8,8 @@
 
 **Crevo(Creative Evolution)** is a powerful, intuitive, and feature-rich **design editor** built for creators of all levels. Whether you're designing social media graphics, presentations, or personal projects, **Crevo** brings a seamless editing experience to your fingertips.
 
+### Check out the [**demo**](https://crevo-gamma.vercel.app/) to see what it can do!
+
 🛠️ _Tech-Stack:_ **Next.js, hono.js, TailwindCSS, Stripe, Stable Diffusion XL**, and more.  
 🎯 _Mission:_ Make graphic design simple, collaborative, and powered by AI.
 
