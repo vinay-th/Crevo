@@ -588,7 +588,7 @@ const buildEditor = ({
 
         try {
           const response = await fetch(
-            'http://localhost:3000/api/images/upload-to-imgg',
+            `${process.env.NEXT_PUBLIC_APP_URL}/api/images/upload-to-imgg`,
             {
               method: 'POST',
               headers: {
