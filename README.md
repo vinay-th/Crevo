@@ -176,6 +176,7 @@ This project is licensed under the **MIT License**.
 - **Stable Diffusion XL API** by Cloudflare.
 - **Background Removal** by Bria AI.
 - UI Components built with **TailwindCSS** and **Shadcn UI**.
+- UI Design inspired by a Figma community design 
 
 ---
 
