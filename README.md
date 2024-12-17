@@ -2,7 +2,7 @@
 
 > **Inspired by Canva** | A modern, full-stack, mini SaaS project for graphic design.
 
----
+## ![Crevo](public/proto/crevo.png)
 
 ## 🌟 **Overview**
 
